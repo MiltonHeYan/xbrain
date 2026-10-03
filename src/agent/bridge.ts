@@ -73,6 +73,7 @@ export async function bridge(command: string, target: string, input = '') {
     annotationMatches,
     annotationsPreserved: normalized.bookmarks.length - annotationMatches,
     warningCount: normalized.warnings.length,
+    warnings: normalized.warnings,
     coverage: 'partial',
   };
 }

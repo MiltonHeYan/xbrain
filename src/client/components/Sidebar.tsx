@@ -28,12 +28,7 @@ export function Sidebar({
       <a className="brand" href="/" aria-label="xstash home">
         <span className="brand-mark">x</span>xstash<span className="brand-dot">.</span>
       </a>
-      <div className="workspace">
-        <span className="workspace-avatar">Y</span>
-        <div>
-          Your workspace<small>A little more organized.</small>
-        </div>
-      </div>
+      <p className="workspace">A place for things worth keeping.</p>
       <nav aria-label="Collection navigation">
         <p className="eyebrow">LIBRARY</p>
         {(Object.keys(viewNames) as View[]).map((v) => (
@@ -77,18 +72,9 @@ export function Sidebar({
         </div>
       </nav>
       <div className="sidebar-bottom">
-        <div className="agent-note">
-          <span className="agent-symbol">✳</span>
-          <strong>Your agent. Your collection.</strong>
-          <p>
-            Bring the intelligence.
-            <br />
-            We’ll keep the good stuff.
-          </p>
-          <button id="agent-guide" onClick={onGuide}>
-            Set up your agent ↗
-          </button>
-        </div>
+        <button className="agent-link" id="agent-guide" onClick={onGuide}>
+          Set up your agent <span aria-hidden="true">↗</span>
+        </button>
         <button id="export" className="export-link" disabled={disabled} onClick={onExport}>
           ⇩ <span>Export collection</span>
         </button>
