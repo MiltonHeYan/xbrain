@@ -200,12 +200,12 @@ export function App() {
         <main id="main">
           <div className="title-row">
             <div>
-              <div className="title-eyebrow">A HOME FOR YOUR FINDS</div>
+              <div className="title-eyebrow">YOUR COLLECTION</div>
               <h1>
                 {topic || viewNames[view]}
                 <span>.</span>
               </h1>
-              <p id="page-description">Less lost in your feed. More here when you need it.</p>
+              <p id="page-description">Good ideas, kept close.</p>
             </div>
             <button
               id="open-import"
@@ -312,7 +312,7 @@ export function App() {
               ))
             ) : (
               <div className="empty">
-                <span>◇</span>
+                <span aria-hidden="true">◇</span>
                 <h2>{items.length ? 'No bookmarks match yet.' : 'Your collection starts here.'}</h2>
                 <p>
                   {items.length

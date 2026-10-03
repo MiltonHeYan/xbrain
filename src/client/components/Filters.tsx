@@ -79,7 +79,7 @@ export function Filters({
           <option value="oldest">Oldest first</option>
           <option value="author">Author A–Z</option>
         </select>
-        <div className="view-switch" aria-label="Layout">
+        <div className="view-switch" role="group" aria-label="Layout">
           {(['grid', 'list'] as const).map((v) => (
             <button
               key={v}
@@ -103,22 +103,25 @@ export function Filters({
           >
             All topics
           </button>
-          {topics.slice(0, 6).map(([t]) => (
-            <button
-              key={t}
-              className={'chip ' + (topic === t ? 'active' : '')}
-              aria-pressed={topic === t}
-              onClick={() => setTopic(t)}
-            >
-              {t}
-            </button>
-          ))}
+          {topics
+            .filter(([t], i) => i < 5 || t === topic)
+            .slice(0, 6)
+            .map(([t]) => (
+              <button
+                key={t}
+                className={'chip ' + (topic === t ? 'active' : '')}
+                aria-pressed={topic === t}
+                onClick={() => setTopic(t)}
+              >
+                {t}
+              </button>
+            ))}
         </div>
         <select
           id="topic-select"
           aria-label="Choose any topic"
           value={topic}
-          hidden={topics.length < 7}
+          hidden={topics.length < 6}
           onChange={(e) => setTopic(e.target.value)}
         >
           <option value="">All topics</option>
@@ -128,6 +131,18 @@ export function Filters({
             </option>
           ))}
         </select>
+        {(query || topic || view !== 'all') && (
+          <button
+            className="clear-filters"
+            onClick={() => {
+              setQuery('');
+              setTopic('');
+              setView('all');
+            }}
+          >
+            Clear filters
+          </button>
+        )}
         <span id="result-count" aria-live="polite">
           {count} bookmark{count === 1 ? '' : 's'}
         </span>

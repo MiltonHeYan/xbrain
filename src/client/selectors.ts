@@ -19,14 +19,16 @@ export function filterBookmarks<T extends Bookmark>(
         (view !== 'untagged' || !b.tags.length) &&
         (!topic || b.tags.includes(topic)),
     )
-    .filter((b) =>
-      words.every((word) =>
-        [b.text, b.summary, b.author.name, b.author.username, ...b.tags, b.note]
-          .join(' ')
-          .toLowerCase()
-          .includes(word),
-      ),
-    )
+    .filter((b) => {
+      // Legacy records can have the generated fallback but no sourceFields marker.
+      // Exclude only that fallback; genuine source text and annotations stay searchable.
+      const authorName =
+        b.author.name === 'Unknown author' && !b.author.username ? '' : b.author.name;
+      const searchable = [b.text, b.summary, authorName, b.author.username, ...b.tags, b.note]
+        .join(' ')
+        .toLowerCase();
+      return words.every((word) => searchable.includes(word));
+    })
     .sort((a, b) =>
       sort === 'author'
         ? a.author.name.localeCompare(b.author.name)
