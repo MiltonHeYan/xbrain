@@ -1,6 +1,6 @@
 # Import format and merge contract
 
-格式的最终依据是 `lib/bookmarks.mjs`。本文件解释 v1 原型的输入、限制与合并方式；所有示例均为虚构数据。
+格式的最终依据是 `src/shared/bookmarks.ts`。本文件解释 v1 原型的输入、限制与合并方式；所有示例均为虚构数据。
 
 ## Supported inputs
 

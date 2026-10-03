@@ -7,3 +7,5 @@ node_modules/
 .sites-runtime/
 qa-artifacts/
 .DS_Store
+.build/
+coverage/

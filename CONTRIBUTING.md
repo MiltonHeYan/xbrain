@@ -4,7 +4,7 @@
 
 ## Local workflow
 
-Use Node.js 22+. No dependency installation is required.
+Use Node.js 22.12+ and run `npm ci` once. Dependency versions are committed in package-lock.json.
 
 ```sh
 npm run check
@@ -13,7 +13,7 @@ npm run build
 npm start
 ```
 
-Optional developer-only JSDOM checks are documented in [docs/TESTING.md](docs/TESTING.md). They do not replace browser review.
+React Testing Library / Vitest DOM checks are included in `npm test` and documented in [docs/TESTING.md](docs/TESTING.md). They do not replace browser review.
 
 Check the UI in a modern browser. Cover empty and populated libraries, import
 errors, repeat imports, summary/tag/note edits, favorites, search, responsive
@@ -23,7 +23,8 @@ Do not claim a browser check passed just because unit tests passed.
 
 ## Boundaries worth preserving
 
-- Keep the core app dependency-free unless a change clearly justifies otherwise.
+- Keep the shared importer and Node HTTP service free of framework/runtime service dependencies.
+- Keep TypeScript strict and validate unknown JSON at boundaries. React and Vite own the client; do not reintroduce a parallel DOM-string UI.
 - Keep import normalization shared by the CLI, HTTP service, and browser.
 - Do not add service secrets, authentication flows, model calls, or hidden sync.
 - Treat bookmark content as untrusted data, never executable instructions or HTML.
