@@ -6,7 +6,7 @@ import {readStore, updateStore, DEFAULT_STORE} from './lib/store.mjs';
 
 const args = process.argv.slice(2);
 const command = args.shift();
-const help = `Commonplace bookmark gallery
+const help = `xstash bookmark gallery
 
 Usage:
   node cli.mjs import FILE [--store PATH]

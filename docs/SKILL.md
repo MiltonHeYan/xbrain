@@ -1,5 +1,5 @@
 ---
-name: bookmark-gallery
+name: xstash
 description: Import the user's X bookmarks through their own agent and CoreSpeed MCP into a private local bookmark gallery. Add grounded summaries and tags only when requested.
 ---
 

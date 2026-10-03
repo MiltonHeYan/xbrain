@@ -1,10 +1,10 @@
 # Fresh-agent installation and acceptance
 
-The distributable skill is the WHOLE `bookmark-gallery/` folder, with its root
+The distributable skill is the WHOLE `xstash/` folder, with its root
 `SKILL.md`, scripts, lib, public, CLI and server. Do not install only the old
 docs/SKILL.md. An existing project can be invoked by absolute SKILL.md path with
 no global installation. For automatic discovery, copy the clean source folder
-into the chosen client's supported skills directory as `bookmark-gallery` only
+into the chosen client's supported skills directory as `xstash` only
 after the user selects that scope; never overwrite an existing installation.
 Exclude data/, *.log, local-server.pid, qa-artifacts/, node_modules/ and dist/.
 Keep the existing running gallery as the explicit destination even if the skill
@@ -32,10 +32,10 @@ keys between clients or change global configuration implicitly.
 
 ## Self-contained test prompt
 
-> Read and use /ABSOLUTE/PATH/bookmark-gallery/SKILL.md. With your existing
+> Read and use /ABSOLUTE/PATH/xstash/SKILL.md. With your existing
 > authorized CoreSpeed connection, read up to five bookmarks from my single
 > personal Twitter/X account (ask if ambiguous), generate short Chinese summaries
-> and 1–4 grounded tags, and import into my running local Commonplace at
+> and 1–4 grounded tags, and import into my running local xstash at
 > http://127.0.0.1:4317. Inspect current schemas; no invented pagination. Use no
 > previous conversation or persistent memory. Use no demo records. Do not modify
 > X, other projects, credentials or browser sessions. Keep real data private on

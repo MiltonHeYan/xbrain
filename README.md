@@ -1,8 +1,10 @@
-# Commonplace
+# xstash
+
+Formerly Commonplace. Existing local libraries remain compatible.
 
 **把值得保存的内容，变成值得回看的收藏。**
 
-一个本地优先、零运行时依赖的 X 书签画廊原型。带上你自己的 Agent 和 CoreSpeed MCP：Agent 读取授权账号的书签，按需整理摘要与标签；Commonplace 负责导入、浏览、搜索和保存。
+一个本地优先、零运行时依赖的 X 书签画廊原型。带上你自己的 Agent 和 CoreSpeed MCP：Agent 读取授权账号的书签，按需整理摘要与标签；xstash 负责导入、浏览、搜索和保存。
 
 没有内置模型、模型 API Key 输入框或 X 登录。即使没有 Agent，你也可以直接导入兼容的 JSON。
 
@@ -11,25 +13,25 @@
 ## 安装 Skill 并整理自己的书签
 
 需要 Node.js 22+、一个能执行本地命令的 Agent，以及该 Agent 中已授权的
-CoreSpeed MCP 和个人 X 连接。Commonplace 不保存这些服务的密钥。
+CoreSpeed MCP 和个人 X 连接。xstash 不保存这些服务的密钥。
 
 ```sh
-git clone https://github.com/MiltonHeYan/commonplace-bookmark-gallery.git
-cd commonplace-bookmark-gallery
+git clone https://github.com/MiltonHeYan/xstash.git
+cd xstash
 npm start
 ```
 
 无需 `npm install`。把本目录的 `SKILL.md` **绝对路径**交给一个新 Agent；
 保留整个目录，不要只复制 Skill 文件。可直接这样说：
 
-> 使用 /绝对路径/commonplace-bookmark-gallery/SKILL.md，通过我在当前 Agent
+> 使用 /绝对路径/xstash/SKILL.md，通过我在当前 Agent
 > 已授权的 CoreSpeed 连接，读取个人 X 账号最多 5 条书签，生成简短中文摘要
 > 和标签，导入 http://127.0.0.1:4317 并读回核验。不要使用演示数据，不要修改
 > X，不要读取历史记忆；账号不明确或授权缺失时停下说明。
 
 根 Skill 会指导 Agent 查验当前账号和工具 schema，并通过本地桥接直接导入。
 如需自动发现，请按你的客户端规则将**整个干净源码目录**安装为
-`bookmark-gallery` Skill；不要覆盖现有安装或复制私人 `data/`。
+`xstash` Skill；不要覆盖现有安装或复制私人 `data/`。
 MCP 安装和 OAuth 授权按 [CoreSpeed 当前官方说明](https://corespeed.io/SKILL.md)
 由用户在目标客户端完成。连接在一个 Agent 可用，不代表另一个 Agent 自动继承。
 
@@ -40,7 +42,7 @@ MCP 安装和 OAuth 授权按 [CoreSpeed 当前官方说明](https://corespeed.i
 解压源码包后，在项目目录运行：
 
 ```sh
-cd bookmark-gallery
+cd xstash
 npm start
 ```
 
@@ -73,7 +75,7 @@ node cli.mjs stats
 
 交给空白 Agent 的入口现在是根目录 **[SKILL.md](SKILL.md)**。保留整个项目文件夹；仅复制 `docs/SKILL.md` 不包含执行桥接。安装与独立验收见 **[CLEAN_AGENT_ACCEPTANCE.md](docs/CLEAN_AGENT_ACCEPTANCE.md)**。Agent 可把实际读取并整理的书签直接送入正在运行的本地图库，不需要用户手动粘贴 JSON。
 
-1. 让你的 Agent 阅读 **[CoreSpeed 官方最新设置说明](https://corespeed.io/SKILL.md)**，按该客户端的当前流程完成配置。在 CoreSpeed 中连接你要读取的 X 账号。已有连接可以复用。不要把凭据粘贴到 Commonplace。
+1. 让你的 Agent 阅读 **[CoreSpeed 官方最新设置说明](https://corespeed.io/SKILL.md)**，按该客户端的当前流程完成配置。在 CoreSpeed 中连接你要读取的 X 账号。已有连接可以复用。不要把凭据粘贴到 xstash。
 2. 把本项目的 **[docs/SKILL.md](docs/SKILL.md)** 交给 Agent 阅读。它是书签导入工作流，与 CoreSpeed 自身的安装说明是两份不同文件。
 3. 要求 Agent 先读取一个小批次，说明当前连接器能够返回的范围；如果你需要，再生成忠实于原文的摘要与标签。
 4. 将结果保存成私人 JSON 文件，然后用界面或 CLI 导入。核对处理数量和警告。
@@ -167,7 +169,7 @@ npm run build
 
 ## 许可与状态
 
-[MIT](LICENSE)。Commonplace 是独立原型；X 和 CoreSpeed 的服务及品牌属于各自所有者，相关条款独立适用。MIT 许可覆盖本项目代码与自创示例，不会给你额外的第三方内容权利。
+[MIT](LICENSE)。xstash 是独立原型；X 和 CoreSpeed 的服务及品牌属于各自所有者，相关条款独立适用。MIT 许可覆盖本项目代码与自创示例，不会给你额外的第三方内容权利。
 
 `package.json` 保留 `private: true`，避免误发到 npm；这不限制 MIT 许可下的源码使用。当前源码包没有自动发布步骤，也没有绑定虚构的项目仓库地址。
 
@@ -179,22 +181,22 @@ Requirements: Node.js 22+, an agent with local command execution, and an authori
 CoreSpeed MCP connection with your personal X account in that same agent.
 
 ```sh
-git clone https://github.com/MiltonHeYan/commonplace-bookmark-gallery.git
-cd commonplace-bookmark-gallery
+git clone https://github.com/MiltonHeYan/xstash.git
+cd xstash
 npm start
 ```
 
 No `npm install` is needed. Give a fresh agent the absolute path to the root
 `SKILL.md` and keep the entire source folder together. For example:
 
-> Use /absolute/path/commonplace-bookmark-gallery/SKILL.md. With my authorized
+> Use /absolute/path/xstash/SKILL.md. With my authorized
 > CoreSpeed connection, fetch up to five personal X bookmarks, generate grounded
 > summaries and tags, and import them into http://127.0.0.1:4317. Verify read-back.
 > Do not use demo data, persistent memory, or X mutation tools. Stop if the account
 > is ambiguous or authorization is missing.
 
 For automatic skill discovery, install the whole clean source folder as
-`bookmark-gallery` in your client's supported skill directory. Do not overwrite
+`xstash` in your client's supported skill directory. Do not overwrite
 an existing installation or copy private data. Configure CoreSpeed and complete
 OAuth using its [current official instructions](https://corespeed.io/SKILL.md).
 The agent sends enriched JSON directly to the running gallery through the bundled
@@ -220,12 +222,12 @@ bridge; the user does not need to manually import a demo file.
 
 ## English quick start
 
-Commonplace is a local-first X bookmark gallery. Bring your own agent and CoreSpeed MCP connection; the agent fetches authorized bookmarks and optionally adds grounded summaries and tags. The gallery itself makes no model calls and stores no service credentials.
+xstash is a local-first X bookmark gallery. Bring your own agent and CoreSpeed MCP connection; the agent fetches authorized bookmarks and optionally adds grounded summaries and tags. The gallery itself makes no model calls and stores no service credentials.
 
 **Requirements:** Node.js 22+ and a modern browser. No dependency installation is needed.
 
 ```sh
-cd bookmark-gallery
+cd xstash
 npm start
 # Open http://127.0.0.1:4317
 ```

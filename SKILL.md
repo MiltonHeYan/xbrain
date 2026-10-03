@@ -1,9 +1,9 @@
 ---
-name: bookmark-gallery
-description: Organize the user's real X bookmarks into a private local Commonplace gallery using an authorized CoreSpeed MCP connection, with grounded summaries and tags. Use for agent-driven bookmark collection, not a synthetic demo.
+name: xstash
+description: Organize the user's real X bookmarks into a private local xstash gallery using an authorized CoreSpeed MCP connection, with grounded summaries and tags. Use for agent-driven bookmark collection, not a synthetic demo.
 ---
 
-# Commonplace for a fresh agent
+# xstash for a fresh agent
 
 This folder is the complete skill and zero-dependency Node 22+ local app. Resolve all paths relative to THIS file, not your working directory or a remembered checkout. Read [docs/SKILL.md](docs/SKILL.md) for account selection, response shapes, privacy and merge rules. Read [docs/IMPORT_FORMAT.md](docs/IMPORT_FORMAT.md) when producing the enriched envelope.
 

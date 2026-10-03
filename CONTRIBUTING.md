@@ -1,6 +1,6 @@
 # Contributing
 
-感谢帮助改进 Commonplace。这个原型优先保持可审查、可迁移和易运行。
+感谢帮助改进 xstash。这个原型优先保持可审查、可迁移和易运行。
 
 ## Local workflow
 

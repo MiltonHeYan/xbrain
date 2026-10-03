@@ -105,7 +105,7 @@ const server = http.createServer(async (req, res) => {
 server.requestTimeout = 30_000;
 server.headersTimeout = 15_000;
 server.on('error', error => {
-  console.error(`Could not start Commonplace: ${error.code || error.message}`);
+  console.error(`Could not start xstash: ${error.code || error.message}`);
   process.exitCode = 1;
 });
-server.listen(configuredPort, '127.0.0.1', () => console.log(`Commonplace ready at http://127.0.0.1:${server.address().port}\nLocal datastore: ${store}`));
+server.listen(configuredPort, '127.0.0.1', () => console.log(`xstash ready at http://127.0.0.1:${server.address().port}\nLocal datastore: ${store}`));
