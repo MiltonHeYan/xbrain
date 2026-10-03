@@ -13,7 +13,7 @@ From this whole folder run `npm ci`, then `npm start`. The single start command 
 
 ## Resolve the execution boundary
 
-You need a terminal on the user's Mac, Node 22.12+, this whole folder, and an already authorized CoreSpeed connection in THIS agent. A cloud connector does not imply the local CLI has it. A cloud `/workspace` file does not imply Mac accessibility. Never copy credentials out of another agent. If MCP is absent, stop and request the intended client's CoreSpeed OAuth setup using https://corespeed.io/SKILL.md; do not create credentials or persistent configuration without authorization.
+You need a terminal on the machine running the gallery, Node 22.12+, this whole folder, and an already authorized CoreSpeed connection in THIS agent. A cloud connector does not imply the local CLI has it. A cloud `/workspace` file does not imply accessibility on another machine. Never copy credentials out of another agent. If MCP is absent, stop and request the intended client's CoreSpeed OAuth setup using https://corespeed.io/SKILL.md; do not create credentials or persistent configuration without authorization.
 
 Use a fresh conversation with no resumed history. For acceptance testing do not search persistent memory, use other project instructions, or use synthetic data as proof of live access. Reuse existing authorization; fresh context need not mean new credentials.
 
