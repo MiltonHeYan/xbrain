@@ -1,284 +1,177 @@
 # xstash
 
-Formerly Commonplace. Existing local libraries remain compatible.
+**把 X 书签，变成值得回看的收藏。**
 
-**把值得保存的内容，变成值得回看的收藏。**
+[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
-一个本地优先的 X 书签画廊，使用严格 TypeScript、React、Vite 和轻量 Node HTTP 服务。带上你自己的 Agent 和 CoreSpeed MCP：Agent 读取授权账号的书签，按需整理摘要与标签；xstash 只呈现黑白书签图库、关键词搜索和只读详情。
+xstash 是 [Milton / HeYan](https://github.com/MiltonHeYan) 发起的 **MIT 开源 Agent Skill + 本地书签图库**。用你自己的 Agent 读取已授权的 X 书签，整理摘要与标签，再放进安静、清晰的黑白图库。
 
-没有内置模型、模型 API Key 输入框、X 登录或手动导入界面。书签由已授权 Agent 通过 Skill 和本地桥接写入。
+一个搜索框、一面卡片墙、只读详情。Agent 负责整理，xstash 负责保存和呈现。没有内置模型、模型密钥输入框、X 登录页或手动导入界面。
 
-[English quick start](#english-quick-start) · [Agent 工作流](docs/SKILL.md) · [数据格式](docs/IMPORT_FORMAT.md) · [隐私与安全](docs/PRIVACY.md)
+**推荐组合：[你的 Agent](#step-1准备一个兼容的-agent) + [xstash Skill](#step-2安装-xstash-skill) + [CoreSpeed MCP](#a推荐corespeed-mcp)。** CoreSpeed 提供已连接账号的工具，让你从授权到第一批书签少做一些接入工作。也可自行接入官方 X API，详见下方两条路径。
 
-## 安装 Skill 并整理自己的书签
+## Step 1：准备一个兼容的 Agent
 
-需要 Node.js 22.12+、一个能执行本地命令的 Agent，以及该 Agent 中已授权的
-CoreSpeed MCP 和个人 X 连接。xstash 不保存这些服务的密钥。
+<p>
+  <a href="https://code.claude.com/docs/en/overview"><img src="docs/assets/agents/claude-code.svg" alt="Claude Code" width="32" height="32"></a>
+  &nbsp;&nbsp;
+  <a href="https://developers.openai.com/codex/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" alt="Codex" width="32" height="32"></picture></a>
+  &nbsp;&nbsp;
+  <a href="https://cursor.com"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" alt="Cursor" width="32" height="32"></picture></a>
+  &nbsp;&nbsp;
+  <a href="https://openclaw.ai"><img src="docs/assets/agents/openclaw.svg" alt="OpenClaw" width="32" height="32"></a>
+</p>
+
+你需要一个能读取 `SKILL.md`、执行本地命令、访问授权数据源的 Agent，以及 **Git、Node.js 22.12+ 和现代浏览器**。运行图库的终端与 Agent 必须能访问同一文件夹和 `127.0.0.1` 服务。
+
+| Agent | Skill 安装目录 | 官方说明 |
+| --- | --- | --- |
+| Claude Code | `~/.claude/skills/xstash/` | [Skills](https://code.claude.com/docs/en/skills) |
+| Codex | `~/.agents/skills/xstash/` | [Skills](https://developers.openai.com/codex/skills/) |
+| Cursor | `~/.cursor/skills/xstash/` | [Skills](https://cursor.com/docs/skills) |
+| OpenClaw | `~/.openclaw/skills/xstash/` | [Skills](https://docs.openclaw.ai/tools/skills) |
+
+这些是提供 Skill 加载机制的主要 Agent，不代表所有版本、运行环境和 MCP 配置都已逐一验收。客户端仍需允许命令执行；使用路径 A 时，还需在**当前 Agent** 配好远程 MCP/OAuth。一个客户端已连接，不代表另一个自动继承。其他 Agent 满足相同能力要求时，可直接读取本项目的绝对路径 `SKILL.md`。
+
+## Step 2：安装 xstash Skill
+
+**安装整个仓库，不要只复制 `SKILL.md`。** Skill 使用仓库内的应用、脚本和数据格式说明；xstash 目前没有发布可直接安装的 npm 包。
+
+下面以 Codex 的用户级 Skill 目录为例（macOS / Linux / WSL shell）。Claude Code、Cursor、OpenClaw 用户先把第一行替换为上表对应目录；目录已存在时先检查旧安装并备份数据，不要覆盖。
 
 ```sh
-git clone https://github.com/MiltonHeYan/xstash.git
-cd xstash
-npm ci
-npm start
+XSTASH_HOME="$HOME/.agents/skills/xstash"
+git clone https://github.com/MiltonHeYan/xstash.git "$XSTASH_HOME" &&
+  cd "$XSTASH_HOME" &&
+  npm ci &&
+  npm start
 ```
 
-首次执行 `npm ci` 安装项目依赖。把本目录的 `SKILL.md` **绝对路径**交给一个新 Agent；
-保留整个目录，不要只复制 Skill 文件。可直接这样说：
+`npm start` 自动构建并启动图库。打开终端显示的地址，默认 **http://127.0.0.1:4317**，保持服务运行。首次本地库为空。按客户端说明重新加载 Skill；若没有自动发现，把安装目录中 `SKILL.md` 的绝对路径交给 Agent。
 
-> 使用 /绝对路径/xstash/SKILL.md，通过我在当前 Agent
-> 已授权的 CoreSpeed 连接，读取个人 X 账号最多 5 条书签，生成简短中文摘要
-> 和标签，导入 http://127.0.0.1:4317 并读回核验。不要使用演示数据，不要修改
-> X，不要读取历史记忆；账号不明确或授权缺失时停下说明。
+Windows 原生 PowerShell 也可在选择好的 Skill 目录中 `git clone`，进入目录后执行同样的 `npm ci`、`npm start`。不要原样粘贴上面的 shell 变量语法。
 
-根 Skill 会指导 Agent 查验当前账号和工具 schema，并通过本地桥接直接导入。
-如需自动发现，请按你的客户端规则将**整个干净源码目录**安装为
-`xstash` Skill；不要覆盖现有安装或复制私人 `data/`。
-MCP 安装和 OAuth 授权按 [CoreSpeed 当前官方说明](https://corespeed.io/SKILL.md)
-由用户在目标客户端完成。连接在一个 Agent 可用，不代表另一个 Agent 自动继承。
+## Step 3：授权访问你的 X 书签
 
-## 先跑起来
+选择一条路径。两者都需要书签所属用户的授权；公开帖子搜索无法替代个人书签权限。
 
-需要 **Node.js 22.12 或更新版本**和现代浏览器。首次运行 `npm ci` 安装锁定依赖；之后统一使用 `npm start`，自动编译并启动。没有数据库或额外后台服务。
+### A（推荐）：CoreSpeed MCP
 
-解压源码包后，在项目目录运行：
+适合希望先用起来、由服务统一管理连接的用户。无需为了 xstash 自行创建 X 开发者 App 或实现 OAuth 回调。xstash 本身不接收 CoreSpeed 或 X 凭据。
+
+**1. 添加 MCP。** 在 [CoreSpeed](https://corespeed.io) 注册或登录，并按 [官方安装说明](https://corespeed.io/SKILL.md) 在使用 xstash 的同一个 Agent 中添加服务器。Claude Code 一行安装：
 
 ```sh
-cd xstash
-npm ci
-npm start
+claude mcp add corespeed https://api.corespeed.io/mcp --transport http --scope user
 ```
 
-打开终端显示的地址，默认是 **http://127.0.0.1:4317**。本地库初始为空；让已授权 Agent 使用根目录 Skill 同步书签，随后刷新页面。界面只保留搜索、图库和详情。
+然后在 Claude Code 中运行 `/mcp`，选择 `corespeed`，完成浏览器 OAuth 登录。安装服务器不等于已完成授权。
 
-想先试一下？另开一个终端，从同一目录导入完全虚构的样例，随后刷新页面：
+Codex：
 
 ```sh
-node cli.mjs import examples/synthetic-bookmarks.json
-node cli.mjs stats
+codex mcp add corespeed --url https://api.corespeed.io/mcp
+codex mcp login corespeed
 ```
 
-这会把样例写入当前本地库。不要把样例当成真实 X 帖子。仅用于测试的独立库可以用 `--store` 指定，见下方。
+Cursor 可在用户级 `~/.cursor/mcp.json` 合并以下服务器配置，再按客户端提示认证；保留原有配置。其他客户端参考 [CoreSpeed 官方 Skill](https://corespeed.io/SKILL.md)，使用同一 HTTP 端点 `https://api.corespeed.io/mcp`，不要凭空套用其他客户端的配置格式。
 
-## 已实现
+```json
+{
+  "mcpServers": {
+    "corespeed": {
+      "type": "http",
+      "url": "https://api.corespeed.io/mcp"
+    }
+  }
+}
+```
 
-- 黑白卡片图库、单一关键词搜索和只读详情
-- 无分类侧栏、主题标签页、多层筛选、手动导入或编辑界面
-- Agent 通过 Skill/API/CLI 写入书签，按 ID 去重、合并
-- 保留本地笔记、收藏与已有注释；原始内容有新版本时更新
-- CLI 导入、统计、导出、备份合并恢复
-- 区分原始内容、导入的摘要、Agent 生成的摘要和用户编辑
-- 本地 Node 服务的磁盘存储，以及静态预览的浏览器存储
-- 默认不加载外部图片，可为当前页面会话明确开启
-- 响应式界面和纯虚构演示内容
+**2. 连接 X。** 打开 [CoreSpeed Connectors](https://app.corespeed.io/connectors)，连接你要读取的个人 X 账号，在浏览器完成服务提示的授权。重新加载工具后，让 Agent 核验当前身份、连接账号与书签工具 schema。账号不明确或授权不完整时先停下，不要切换到别人的账号。
 
-这是可运行的早期原型。没有自动后台同步、全历史抓取、语义搜索、多用户系统、跨设备同步或对 X 的写入操作。视频链接可留在数据中，画廊主要展示文本和图片，不提供视频播放器。
+**3. 让 Agent 整理第一批。** 把下列请求中的路径替换为真实绝对路径：
 
-## 用自己的 Agent + CoreSpeed
+> 使用 /绝对路径/xstash/SKILL.md，通过我在当前 Agent 已授权的 CoreSpeed 个人 X 账号读取最多 5 条书签。保留原文，生成忠实的中文摘要和 1–4 个标签，导入 http://127.0.0.1:4317 并读回核验。报告实际读取、新增和验证数量，以及缺失字段与覆盖范围。不要用演示数据，不要修改 X，不要读取历史记忆；账号不明确或缺少授权时停下说明。
 
-交给空白 Agent 的入口现在是根目录 **[SKILL.md](SKILL.md)**。保留整个项目文件夹；仅复制 `docs/SKILL.md` 不包含执行桥接。安装与独立验收见 **[CLEAN_AGENT_ACCEPTANCE.md](docs/CLEAN_AGENT_ACCEPTANCE.md)**。Agent 可把实际读取并整理的书签直接送入正在运行的本地图库，不需要用户手动粘贴 JSON。
+刷新图库即可查看。摘要使用的是你选择的 Agent；xstash 不包含模型服务或模型订阅。
 
-1. 让你的 Agent 阅读 **[CoreSpeed 官方最新设置说明](https://corespeed.io/SKILL.md)**，按该客户端的当前流程完成配置。在 CoreSpeed 中连接你要读取的 X 账号。已有连接可以复用。不要把凭据粘贴到 xstash。
-2. 把本项目的 **[docs/SKILL.md](docs/SKILL.md)** 交给 Agent 阅读。它是书签导入工作流，与 CoreSpeed 自身的安装说明是两份不同文件。
-3. 要求 Agent 先读取一个小批次，说明当前连接器能够返回的范围；如果你需要，再生成忠实于原文的摘要与标签。
-4. Agent 通过根 Skill 的本地桥接直接导入，并核对处理数量和警告；用户无需搬运 JSON。
+**费用与范围。** 截至 **2026-10-03**，CoreSpeed [价格页](https://corespeed.io/pricing)列出 Free：$0，3,000 credits / 90 天；Pro：$20 / 月，10,000 credits / 月。[计费文档](https://corespeed.io/docs/billing)给出的折算是 1,000 credits = $1。公开价格页没有明确的书签工具单价，因此这里不承诺“每次同步几毛钱”，也不把公开帖子读取费率当作书签费率。先小批量运行，再在 [Billing](https://app.corespeed.io/billing) 核对实际消耗和预算；以当前报价为准。
 
-可以直接给 Agent 这段要求：
+当前项目验证过的 `twitter__get_my_bookmarks` schema（2026-10-03 复核）仅有 `account` 和 `max_results`，没有分页输入。即使响应带 `next_token`，也不能自行添加分页参数。因此当前 CoreSpeed 工作流是**部分书签快照**，不保证全历史同步。缺失的作者和媒体信息不会被编造；每次运行应重新检查实际 schema。
 
-> 阅读项目中的 docs/SKILL.md。使用我明确指定的 CoreSpeed X 账号，只读获取连接器当前支持的一小批书签。先检查工具 schema 和错误，不要猜测分页参数，不要声称是全历史备份。保留字符串 ID 和原文；为每条内容生成简短忠实摘要和 1–4 个标签，并记录真实的 Agent 名称、生成时间和依据。缺少作者或图片时不要编造。把结果保存为不含任何凭据的私人 JSON 文件，告诉我记录数量、缺失字段和覆盖限制。不要发帖、点赞或更改 X 书签。
+### B：自行接入官方 X API
 
-### 当前连接器限制
+适合希望直接管理 X 开发者 App、权限与计费的开发者。**当前 xstash 没有内置官方 X API OAuth 客户端或拉取适配器。** 这条路径需要你或你的 Agent 编写、审查并维护获取数据的部分，再把响应交给现有 JSON / stdin 桥接；不是第二套开箱即用的登录按钮。
 
-2026-10-02 验证的 `twitter__get_my_bookmarks` schema 只有 `account` 和 `max_results`。返回值可能带 `next_token`，但该版本没有接收它的输入参数。因此本流程是**部分书签快照**，不是全历史同步。运行前应重新查看实际 schema；不要自行构造分页参数。
-
-验证的样本没有作者和图片展开数据。缺少的作者会显示为未知，图片不会凭空生成。可在用户授权范围内按需读取额外元数据，但不能把未经验证的内容补成事实。X、CoreSpeed 或 Agent 服务可能有额度、费用与账号权限限制；本项目不包含这些服务。
-
-## 从旧版升级
-
-先备份原 `data/bookmarks.json`，不要覆盖或删除它。在新目录运行时，可使用
-`BOOKMARK_STORE=/绝对路径/原项目/data/bookmarks.json npm start` 明确选择旧库；
-首次验收请使用私人备份副本。v1 JSON 和浏览器 `commonplace.library.v1` 存储键
-不变，不需要转换数据。`npm start` 在项目根目录构建 `.build/` 和 `dist/`；
-构建不读取或打包私人 `data/`。CLI/桥接单独执行前先运行 `npm run build`。
-
-## CLI 与备份
-
-以下命令均从项目目录执行：
+1. **开通开发者访问。** 用你的 X 账号进入 [Developer Console](https://console.x.com)，完成当前注册、用途说明与所需条款。按当前控制台的 New App 流程创建 App 并填写名称、描述和用途；若你的控制台要求 Project，再创建或选择 Project。参考 [开发者 App 文档](https://docs.x.com/fundamentals/developer-apps)。
+2. **配置 App。** 启用 OAuth 2.0 用户认证，选择与你实现相符的应用类型，保存 OAuth 2.0 Client ID（confidential client 另需 Client Secret），登记准确的回调 URL 和网站 URL。回调由你实现，不能直接用 xstash 图库地址冒充回调处理器。官方建议本地回调使用 `http://127.0.0.1`；授权请求的 URI 必须与登记值完全一致。
+3. **确认权限和预算。** 读取书签需要 `bookmark.read tweet.read users.read`；需要刷新令牌时再加 `offline.access`。只读流程不需要 `bookmark.write`。在控制台查看端点权限、充值 credits 并设置预算；X 当前采用预付 credits、按量计费，不应照搬旧版 Basic / Pro 月费教程。
+4. **完成用户 OAuth。** 按 [OAuth 2.0 Authorization Code + PKCE](https://docs.x.com/fundamentals/authentication/oauth-2-0/authorization-code) 实现：生成随机 `state` 和 PKCE verifier/challenge，跳转用户授权页；验证回调 `state`，用返回的 code 和 verifier 换取用户 access token。仅在请求了相应权限并获得 refresh token 时实现刷新。凭据保留在你的受控凭据存储中，不能放进仓库、书签 JSON 或公开日志。
+5. **读取本人的书签。** 用该用户 token 调用 `GET /2/users/me` 确认用户 ID，再调用 `GET /2/users/{id}/bookmarks`。App-only bearer token 不足以读取私有书签；路径 ID 必须对应授权用户。按 [书签读取文档](https://docs.x.com/x-api/users/get-bookmarks) 请求需要的字段、author/media expansions，每页 `max_results` 为 1–100，后续页使用返回的 `next_token` 作为 `pagination_token`。当前[读取限流](https://docs.x.com/x-api/fundamentals/rate-limits)为每用户每 15 分钟 180 次，遇到 429 遵循 `x-rate-limit-reset`；限流和计费是不同限制。不要把 API 返回范围表述为完整历史备份。
+6. **接入 xstash。** 将成功的 X-style JSON 响应（`data`、可选 `includes` / `meta`）保存为私人文件，或转换为 [标准 envelope](docs/IMPORT_FORMAT.md)。在 Step 2 的项目目录执行下方命令。桥接会导入并读回核验；拒绝错误响应，私密 token 不应出现在输入中。
 
 ```sh
-node cli.mjs import /private/path/snapshot.json
+node scripts/agent-bridge.mjs doctor http://127.0.0.1:4317
+node scripts/agent-bridge.mjs import http://127.0.0.1:4317 < /private/path/bookmarks.json
+```
+
+**官方 X API 费用。** [当前官方价格](https://docs.x.com/x-api/getting-started/pricing)（2026-10-03 核对）为按资源计费：标准 Post read 为 **$0.005 / 资源**；符合 **Owned Reads** 条件，即认证用户同时拥有开发者 App 时，自己的书签读取为 **$0.001 / 资源**。例如仅按 100 个符合条件的书签资源估算为 **$0.10**，这不是“一次 API 请求 $0.10”的固定报价；额外用户查询、其他资源及 Agent 模型费用另计。按实际端点、资源分类和控制台账单核对。
+
+### 两条路径怎么选？
+
+| 对比项 | A：CoreSpeed MCP（推荐） | B：官方 X API 自建 |
+| --- | --- | --- |
+| 接入流程 | 添加 MCP → 登录 → 连接 X → 调用 Skill | 开发者注册 → App 配置 → PKCE 用户授权 → 实现读取 → 接入桥接 |
+| 凭据管理 | 在 CoreSpeed 与 Agent 的授权体系中管理；xstash 不保存 | 自行安全保存 App 配置、用户 token，并处理刷新和撤销 |
+| 费用 | CoreSpeed 方案 / credits；书签实际消耗以控制台为准 | X 预付 credits 按资源计费；Owned Reads 有资格条件 |
+| 维护 | CoreSpeed 管理上游连接；仍需处理重授权、额度和 schema 变化 | 自行维护 OAuth、分页、重试、限流、字段映射和 API 变化 |
+| 书签范围 | 当前已验证工具无分页输入，仅部分快照 | 官方端点支持分页；仍受端点范围、可见性和额度限制 |
+| xstash 支持状态 | 根目录 Skill 已包含该工作流与本地桥接 | 已有标准 JSON / stdin 导入；未内置 X OAuth / 拉取适配器 |
+
+两条路径都另需你自己的 Agent / 模型服务。选择 CoreSpeed 的主要理由是降低接入和维护负担，不是未经验证的价格承诺。
+
+## 你会得到什么
+
+- 黑白卡片图库、单一关键词搜索、只读详情。
+- Agent 生成有来源记录的摘要与标签；原文与摘要分别保留。
+- 按字符串 ID 去重和合并；重复快照不会删除这次未出现的收藏。
+- 本地磁盘保存、CLI 导出备份与合并恢复；已有笔记、收藏和注释继续保留。
+- 默认不加载第三方图片。详情中明确开启后，仅在当前详情会话加载。
+
+目前不提供自动后台同步、全历史抓取、语义搜索、跨设备同步、多用户系统、X 写入、视频播放器或手动导入/编辑 UI。项目仍在早期，完整限制见 [数据格式](docs/IMPORT_FORMAT.md) 与 [隐私说明](docs/PRIVACY.md)。
+
+## 本地数据、备份与升级
+
+Node 服务仅监听 `127.0.0.1`，默认保存到项目内 `data/bookmarks.json`。它没有生产环境登录认证，不要通过公网隧道或反向代理公开私人库。书签虽存本地，使用 Agent / CoreSpeed 处理时仍受这些服务各自的数据处理条款约束；“本地优先”不代表整个处理链离线。
+
+从项目目录运行：
+
+```sh
 node cli.mjs stats
 node cli.mjs export --output /private/path/new-backup.json
 node cli.mjs restore /private/path/new-backup.json
 node cli.mjs --help
 ```
 
-- 普通导入：最多 **10 MiB / 10,000 条**每批。
-- 完整本地库：最多 **100 MiB / 50,000 条**；浏览器实际可用空间通常更小。
-- `restore` 接受版本 1 的收藏库备份，以**合并**方式恢复；不会删除当前库中已有的记录，也不会覆盖已有本地注释。需要精确恢复副本时，恢复到一个尚不存在的新库路径。
-- `export --output` 拒绝覆盖已存在的文件。省略 `--output` 会输出到标准输出，注意不要把私人书签写入共享日志。
-- Agent 桥接与普通 CLI 导入都使用单批限制。较大的备份请使用 CLI `restore`。
-- 重复导入不会因为某条内容本次没有出现就删除它。
+`export` 不覆盖已有文件；`restore` 合并而非清空替换。普通导入每批最多 10 MiB / 10,000 条；完整本地库及备份恢复最多 100 MiB / 50,000 条。需要精确恢复副本时，恢复到新的库路径。CLI 可用 `--store`，服务可用 `BOOKMARK_STORE` 指定私人文件。CLI / 桥接在新安装或源码更新后单独运行前，先执行 `npm run build`。
 
-指定独立数据文件：
+从旧名 Commonplace 升级时先备份旧 `data/bookmarks.json`，用备份副本验证。v1 数据格式与 `commonplace.library.v1` 浏览器存储键保持兼容。可通过 `BOOKMARK_STORE=/绝对路径/旧库.json npm start` 选择原库；不要用新目录的空库覆盖它。
 
-```sh
-node cli.mjs import examples/synthetic-bookmarks.json --store /private/path/test-library.json
-node cli.mjs stats --store /private/path/test-library.json
-```
+静态构建 `dist/` 不包含私人 `data/`，也没有 Node API。静态预览展示虚构样例，不能代替本地真实书签库；已有浏览器库仍按域名独立保存。开启外部图片会向图片主机发送网络请求，点击原文会访问 X。
 
-让服务使用该文件（macOS / Linux shell）：
+## 开发与贡献
 
 ```sh
-BOOKMARK_STORE=/private/path/test-library.json PORT=4318 npm start
-```
-
-PowerShell：
-
-```powershell
-$env:BOOKMARK_STORE = 'C:\private\test-library.json'
-$env:PORT = '4318'
-npm start
-```
-
-CLI 和服务的默认库都在**项目目录**的 `data/bookmarks.json`，不会因为当前工作目录不同而另建一个默认库。显式传入的相对路径仍相对于当前工作目录；私人库建议使用绝对路径。CLI 用 `--store`，服务用 `BOOKMARK_STORE`，不要混淆。
-
-## 本地运行与静态预览
-
-**本地 Node 服务**：仅监听 `127.0.0.1`；数据写入项目的 `data/bookmarks.json`，可用 `BOOKMARK_STORE` 更改路径。它没有用户登录或生产环境认证，不应通过隧道或反向代理公开到互联网。
-
-**静态预览**：没有 Node API。首次打开显示完全虚构的演示书签；可搜索和查看详情，不提供手动导入或编辑。已有浏览器本地库仍可读取，存储键保持兼容；不同域名和浏览器的数据互不相通。真实收藏请在本地 Node 服务中由 Agent 通过 Skill 写入。
-
-构建可独立托管的静态文件：
-
-```sh
-npm run build
-```
-
-结果在 `dist/`，不包含 `data/`。使用站点根路径托管；不是双击 HTML 或任意子目录部署。构建不会发布或上传网站。托管时需要确认平台是否支持构建产物中的 `_headers`，否则自行配置等效安全响应头。敏感收藏建议使用自己审查过的本地源码。
-
-外部图片默认关闭；在详情中勾选 **Show external images** 后才从第三方主机加载，主机会收到你的 IP 地址，关闭详情后会重新关闭。原始链接仍会在点击时访问相应网站。
-
-加载数据失败时界面会显示错误，不会悄悄用空库覆盖原库。详情见 [隐私与安全](docs/PRIVACY.md)。
-
-## 开发与验证
-
-架构与贡献边界见 [ARCHITECTURE.md](docs/ARCHITECTURE.md)。
-
-```sh
+npm ci
 npm run check
 npm test
 npm run build
 ```
 
-- `src/client/`：React 界面、组件、样例和浏览器数据适配
-- `src/shared/`：严格数据模型、归一化、校验和合并逻辑
-- `src/server/`：原生 Node HTTP 服务、CLI、原子文件写入与进程间锁
-- `src/agent/bridge.ts`：仅向显式 loopback origin 导入并读回核验
-- `server.mjs` / `cli.mjs` / `scripts/agent-bridge.mjs`：保留的兼容入口，执行编译后的 TypeScript
-- `tests/`：导入、合并、CLI 和 HTTP 测试
-- `docs/` / `examples/`：工作流、格式说明与纯虚构输入
+技术栈：严格 TypeScript、React、Vite、Node HTTP 服务；无额外数据库。参见 [架构](docs/ARCHITECTURE.md)、[贡献指南](CONTRIBUTING.md)、[测试](docs/TESTING.md)、[Agent 工作流](docs/SKILL.md) 和 [独立验收](docs/CLEAN_AGENT_ACCEPTANCE.md)。测试 fixtures 都是虚构数据，测试无需真实 X 或 CoreSpeed 凭据。
 
-测试不需要 X 账号或 CoreSpeed 凭据。`npm test` 先构建，再运行原有 Node 回归及 React Testing Library/Vitest 组件回归。JSDOM 仍属于模拟，不能替代真实浏览器验收。参见 [验证说明](docs/TESTING.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md)。
+## 许可与致谢
 
-## 许可与状态
+[MIT License](LICENSE)。由 [Milton / HeYan](https://github.com/MiltonHeYan) 发起，欢迎贡献。MIT 覆盖本项目代码与自创示例，不授予第三方帖子、媒体或商标的使用权。
 
-[MIT](LICENSE)。xstash 是独立原型；X 和 CoreSpeed 的服务及品牌属于各自所有者，相关条款独立适用。MIT 许可覆盖本项目代码与自创示例，不会给你额外的第三方内容权利。
-
-`package.json` 保留 `private: true`，避免误发到 npm；这不限制 MIT 许可下的源码使用。当前源码包没有自动发布步骤，也没有绑定虚构的项目仓库地址。
-
----
-
-## English: install the skill and use your bookmarks
-
-Requirements: Node.js 22.12+, an agent with local command execution, and an authorized
-CoreSpeed MCP connection with your personal X account in that same agent.
-
-```sh
-git clone https://github.com/MiltonHeYan/xstash.git
-cd xstash
-npm ci
-npm start
-```
-
-Install the locked project dependencies with `npm ci` once. Give a fresh agent the absolute path to the root
-`SKILL.md` and keep the entire source folder together. For example:
-
-> Use /absolute/path/xstash/SKILL.md. With my authorized
-> CoreSpeed connection, fetch up to five personal X bookmarks, generate grounded
-> summaries and tags, and import them into http://127.0.0.1:4317. Verify read-back.
-> Do not use demo data, persistent memory, or X mutation tools. Stop if the account
-> is ambiguous or authorization is missing.
-
-For automatic skill discovery, install the whole clean source folder as
-`xstash` in your client's supported skill directory. Do not overwrite
-an existing installation or copy private data. Configure CoreSpeed and complete
-OAuth using its [current official instructions](https://corespeed.io/SKILL.md).
-The agent sends enriched JSON directly to the running gallery through the bundled
-bridge; the user does not need to manually import a demo file.
-
-## Validation / 验收状态
-
-- Migration validation: strict TypeScript (application, React tests and config),
-  Vite production build, 55 Node regressions and 31 React component tests passed.
-  This retains all 53 original Node tests and all 25 original DOM scenarios, plus
-  migration regressions. Committed fixtures are synthetic. Run `npm run typecheck`
-  and `npm test` for the current checkout.
-- Independent fresh-agent acceptance against the TypeScript migration used five
-  actual authorized bookmarks and
-  a private, initially empty store with `BOOKMARK_STORE` and `PORT=0`. The first
-  import added five; read-back and generated annotation matches were 5/5.
-  A repeat added zero; total and unique IDs remained five. API and stored fields
-  matched, and the existing local library's hash stayed unchanged. The temporary
-  test service and private test directory were removed.
-- Public source and examples contain no private account identity or live bookmark
-  records. These acceptance counts do not imply full-history coverage.
-- The current bookmark tool exposes no pagination input. Imports remain partial
-  snapshots. Actual browser visual/responsive QA remains unverified.
-
-独立验收通过了真实读取、空库首次新增、摘要标签写入、读回和重复去重；
-测试未改变原有私人库。尚未完成真实浏览器视觉/响应式验收。
-
-## Upgrading from v0.1
-
-Back up the old `data/bookmarks.json` first. The v1 JSON format and browser storage
-key remain unchanged; there is no data rewrite or reset. Validate against a private
-copy before switching. To use a specific existing library, run
-`BOOKMARK_STORE=/absolute/private/path/bookmarks.json npm start`.
-Build outputs `.build/` and `dist/` never include `data/`. Direct CLI/bridge commands
-require `npm run build` after installation or source updates.
-
-## English quick start
-
-xstash is a local-first X bookmark gallery. Bring your own agent and CoreSpeed MCP connection; the agent fetches authorized bookmarks and optionally adds grounded summaries and tags. The gallery itself makes no model calls and stores no service credentials.
-
-**Requirements:** Node.js 22.12+ and a modern browser. Run `npm ci` once. `npm start` compiles the TypeScript service, builds the React UI with Vite, and starts the loopback server. No database or extra background service is required.
-
-```sh
-cd xstash
-npm ci
-npm start
-# Open http://127.0.0.1:4317
-```
-
-In another terminal, optionally import fictional examples and refresh:
-
-```sh
-node cli.mjs import examples/synthetic-bookmarks.json
-node cli.mjs stats
-```
-
-Use the [current official CoreSpeed setup instructions](https://corespeed.io/SKILL.md), then give your agent the [bookmark workflow](docs/SKILL.md). Keep real input files and credentials out of this repository. Import from the UI or CLI; export regular backups.
-
-```sh
-node cli.mjs import /private/path/snapshot.json
-node cli.mjs export --output /private/path/new-backup.json
-node cli.mjs restore /private/path/new-backup.json
-```
-
-**Important limits:** the connector schema verified on 2026-10-02 supports a bounded snapshot, with no pagination input. This is not full-history or automatic background sync. Missing authors/media stay missing unless supported reads return them. Agent labels record supplied provenance, not proof of authorship.
-
-The Node app writes to a local JSON file and binds to loopback only. External images are off by default; explicitly enabling them is session-only and contacts their hosts. The static preview keeps data in that browser's origin-specific storage; it is not encrypted, cross-device, or a guaranteed backup. Treat a remote hosted preview as code you must trust. Existing notes, favorites, and annotations survive re-import; restore merges rather than replacing the library.
-
-Snapshots accept up to 10 MiB / 10,000 rows. CLI backup restore accepts up to 100 MiB / 50,000 rows; browser quotas are lower. See [format details](docs/IMPORT_FORMAT.md) and [privacy details](docs/PRIVACY.md).
-
-Run `npm run check`, `npm test`, and `npm run build` before contributing. Build output is static files in `dist/`; building does not deploy. MIT licensed; package publishing is disabled by default.
+xstash 是独立开源项目。Claude、Codex、Cursor、OpenClaw、X 和 CoreSpeed 的名称及标识属于各自权利人；[标识来源](docs/assets/agents/README.md)。展示用于识别兼容工具，不表示官方合作、认证或背书。服务费用、权限与条款以各服务当前说明为准。
