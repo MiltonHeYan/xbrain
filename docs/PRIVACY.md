@@ -62,8 +62,8 @@ The provided app has no analytics SDK, advertising script, model client,
 background sync, or remote font dependency. Its local API requests stay on the
 same origin. That does not mean every user action is network-free:
 
-- External images are off by default. The “Show external images this session”
-  control enables them only for the current page session; refreshing resets it.
+- External images are off by default. The “Show external images” control in bookmark details
+  enables them only while that detail is open; closing it resets consent.
   Loading a referenced remote image contacts that image host. It can observe
   your IP address and request metadata even when referrer information is
   suppressed. Image URLs may themselves contain identifiers.
