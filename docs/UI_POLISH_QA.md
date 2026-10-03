@@ -1,3 +1,14 @@
+# Superseded UI scope
+
+The user requested a simpler black-and-white interface after PR2. The current UI
+contains only a gallery, one search field and read-only details. Categories,
+sidebar, manual import, favorites and editing controls have been removed from the
+frontend. Data fields, browser storage identity and the Agent/CLI/API remain
+compatible. See README.md for the current workflow.
+
+The original PR2 verification record below is historical, not a description of
+the current interface. Real-browser visual verification remains pending.
+
 # Minimal gallery polish: verification
 
 ## Scope

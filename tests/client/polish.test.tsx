@@ -1,75 +1,95 @@
-import {createRef} from 'react';
-import {afterEach, describe, expect, it, vi} from 'vitest';
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {Filters} from '../../src/client/components/Filters.js';
-import {Sidebar} from '../../src/client/components/Sidebar.js';
-const topics: [string, number][] = Array.from({length: 12}, (_, i) => [`Topic ${i + 1}`, 1]);
-function filters(overrides = {}) {
-  return {
-    query: '',
-    setQuery: vi.fn(),
-    sort: 'newest' as const,
-    setSort: vi.fn(),
-    view: 'all' as const,
-    setView: vi.fn(),
-    topic: '',
-    setTopic: vi.fn(),
-    topics,
-    layout: 'grid' as const,
-    setLayout: vi.fn(),
-    count: 12,
-    onExport: vi.fn(),
-    disabled: false,
-    searchRef: createRef<HTMLInputElement>(),
-    ...overrides,
-  };
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {App} from '../../src/client/App.js';
+import {normalizeImport} from '../../src/shared/bookmarks.js';
+import {STORAGE_KEY} from '../../src/client/repository.js';
+
+beforeEach(() => {
+  const bookmarks = normalizeImport({
+    bookmarks: [
+      {
+        id: 'simple-gallery',
+        text: 'A saved idea in a simple gallery',
+        author: {name: 'Example Author'},
+        tags: ['Design', 'Development'],
+        favorite: true,
+      },
+    ],
+  }).bookmarks;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({version: 1, bookmarks}));
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => new Response('{}', {status: 404})),
+  );
+});
+async function openGallery() {
+  render(<App />);
+  await waitFor(() => expect(document.querySelectorAll('.card')).toHaveLength(1));
 }
-afterEach(cleanup);
-describe('Minimal gallery navigation', () => {
-  it('labels the layout controls as a semantic group', () => {
-    render(<Filters {...filters()} />);
-    expect(screen.getByRole('group', {name: 'Layout'})).toBeInTheDocument();
-    expect(screen.getByRole('button', {name: 'Grid view'})).toHaveAttribute('aria-pressed', 'true');
+function expectNoManualWorkflow() {
+  expect(
+    document.querySelector(
+      '#open-import, #import-dialog, #import-json, #import-submit, input[type="file"], ' +
+        '#export, #mobile-export, #edit-tags, #edit-summary, #edit-note, #save-detail',
+    ),
+  ).toBeNull();
+  expect(
+    screen.queryByRole('button', {name: /import|export|save changes|edit bookmark/i}),
+  ).not.toBeInTheDocument();
+  expect(document.querySelector('textarea, [contenteditable="true"]')).toBeNull();
+}
+
+describe('Minimal gallery surface', () => {
+  it('has xstash branding, a single search input, and a result count', async () => {
+    await openGallery();
+    expect(screen.getByText(/^xstash$/i)).toBeInTheDocument();
+    expect(document.querySelectorAll('input')).toHaveLength(1);
+    expect(document.querySelector('#search')).toHaveAccessibleName(/search/i);
+    expect(document.querySelector('#result-count')).toHaveTextContent(/1/);
+    expect(screen.getByRole('region', {name: 'Bookmarks'})).toBeInTheDocument();
   });
-  it('keeps a selected topic outside the initial row visible', () => {
-    render(<Filters {...filters({topic: 'Topic 12'})} />);
-    expect(screen.getByRole('button', {name: 'Topic 12'})).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('combobox', {name: 'Choose any topic'})).toHaveValue('Topic 12');
+  it('does not render sidebar navigation, category tabs, or topic chips', async () => {
+    await openGallery();
+    expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+    expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
+    expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
+    expect(
+      document.querySelector('aside, .sidebar, #chips, .topic-button, .topic-chip'),
+    ).toBeNull();
+    expect(screen.queryByRole('button', {name: /^Design$|^Development$/})).not.toBeInTheDocument();
   });
-  it('offers all topics when exactly six topics exceed the five default chips', () => {
-    render(<Filters {...filters({topics: topics.slice(0, 6)})} />);
-    expect(screen.getByRole('combobox', {name: 'Choose any topic'})).toBeVisible();
-    expect(screen.getByRole('option', {name: 'Topic 6 (1)'})).toBeInTheDocument();
+  it('does not render collection filters, sorting, layout toggles, or favorite actions', async () => {
+    await openGallery();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', {name: 'Layout'})).not.toBeInTheDocument();
+    expect(
+      document.querySelector(
+        '#mobile-view, #sort, #list-view, #grid-view, [data-favorite], .filters, .view-tabs',
+      ),
+    ).toBeNull();
+    expect(
+      screen.queryByRole('button', {name: /grid view|list view|favorites|clear filters/i}),
+    ).not.toBeInTheDocument();
   });
-  it('offers one reset that clears search, topic and collection view', () => {
-    const props = filters({query: 'design', topic: 'Topic 12', view: 'favorites' as const});
-    render(<Filters {...props} />);
-    fireEvent.click(screen.getByRole('button', {name: 'Clear filters'}));
-    expect(props.setQuery).toHaveBeenCalledWith('');
-    expect(props.setTopic).toHaveBeenCalledWith('');
-    expect(props.setView).toHaveBeenCalledWith('all');
+  it('offers no manual import, file, JSON, export, or editing workflow', async () => {
+    await openGallery();
+    expectNoManualWorkflow();
+    expect(document.querySelector('#guide-dialog, #import-guide, #guide-back')).toBeNull();
   });
-  it('omits the reset when nothing is filtered', () => {
-    render(<Filters {...filters()} />);
-    expect(screen.queryByRole('button', {name: 'Clear filters'})).not.toBeInTheDocument();
+  it('keeps details read-only without restoring removed workflows', async () => {
+    await openGallery();
+    fireEvent.click(document.querySelector('[data-open="simple-gallery"]')!);
+    expect(document.querySelector('#detail-dialog')).toBeInTheDocument();
+    expectNoManualWorkflow();
+    expect(screen.queryByRole('button', {name: /favorite|tag|category/i})).not.toBeInTheDocument();
   });
-  it('keeps every topic in navigation and the agent link outside its scrolling area', () => {
-    render(
-      <Sidebar
-        view="all"
-        topic=""
-        counts={{all: 12, favorites: 0, untagged: 0}}
-        topics={topics}
-        onView={vi.fn()}
-        onTopic={vi.fn()}
-        onGuide={vi.fn()}
-        onExport={vi.fn()}
-        disabled={false}
-        local
-      />,
-    );
-    const nav = screen.getByRole('navigation', {name: 'Collection navigation'});
-    expect(nav.querySelectorAll('.topic-button')).toHaveLength(12);
-    expect(nav).not.toContainElement(screen.getByRole('button', {name: /Set up your agent/}));
+  it('searching does not add a second layer of filter controls', async () => {
+    await openGallery();
+    fireEvent.change(document.querySelector('#search')!, {target: {value: 'saved idea'}});
+    expect(document.querySelectorAll('.card')).toHaveLength(1);
+    expect(document.querySelectorAll('input')).toHaveLength(1);
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(document.querySelector('#chips, .view-tabs, .topic-button')).toBeNull();
+    expectNoManualWorkflow();
   });
 });
