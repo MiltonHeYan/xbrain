@@ -13,13 +13,13 @@ xstash 是 [Milton / HeYan](https://github.com/MiltonHeYan) 发起的 **MIT 开�
 ## Step 1：准备一个兼容的 Agent
 
 <p>
-  <a href="https://code.claude.com/docs/en/overview"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/claude-code-dark.svg"><img src="docs/assets/agents/claude-code-light.svg" alt="Claude Code" height="22"></picture></a>
+  <a href="https://code.claude.com/docs/en/overview"><img src="docs/assets/agents/claude-code.svg" alt="Claude Code" width="32" height="32"></a>
   &nbsp;&nbsp;
-  <a href="https://developers.openai.com/codex/"><img src="docs/assets/agents/codex.png" alt="Codex" width="32" height="32"></a> Codex
+  <a href="https://developers.openai.com/codex/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" alt="Codex" width="32" height="32"></picture></a>
   &nbsp;&nbsp;
-  <a href="https://cursor.com"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor-light.svg" alt="Cursor" height="30"></picture></a> Cursor
+  <a href="https://cursor.com"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" alt="Cursor" width="32" height="32"></picture></a>
   &nbsp;&nbsp;
-  <a href="https://openclaw.ai"><img src="docs/assets/agents/openclaw.svg" alt="OpenClaw" width="32" height="32"></a> OpenClaw
+  <a href="https://openclaw.ai"><img src="docs/assets/agents/openclaw.svg" alt="OpenClaw" width="32" height="32"></a>
 </p>
 
 你需要一个能读取 `SKILL.md`、执行本地命令、访问授权数据源的 Agent，以及 **Git、Node.js 22.12+ 和现代浏览器**。运行图库的终端与 Agent 必须能访问同一文件夹和 `127.0.0.1` 服务。
@@ -174,4 +174,4 @@ npm run build
 
 [MIT License](LICENSE)。由 [Milton / HeYan](https://github.com/MiltonHeYan) 发起，欢迎贡献。MIT 覆盖本项目代码与自创示例，不授予第三方帖子、媒体或商标的使用权。
 
-xstash 是独立开源项目。Claude、Codex、Cursor、OpenClaw、X 和 CoreSpeed 的名称及标识属于各自权利人；[官方标识来源](docs/assets/agents/README.md)。展示用于识别兼容工具，不表示官方合作、认证或背书。服务费用、权限与条款以各服务当前说明为准。
+xstash 是独立开源项目。Claude、Codex、Cursor、OpenClaw、X 和 CoreSpeed 的名称及标识属于各自权利人；[标识来源](docs/assets/agents/README.md)。展示用于识别兼容工具，不表示官方合作、认证或背书。服务费用、权限与条款以各服务当前说明为准。

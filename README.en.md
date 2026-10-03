@@ -13,13 +13,13 @@ One search box, a wall of cards, and read-only details. Your agent organizes; xs
 ## Step 1: Bring a compatible agent
 
 <p>
-  <a href="https://code.claude.com/docs/en/overview"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/claude-code-dark.svg"><img src="docs/assets/agents/claude-code-light.svg" alt="Claude Code" height="22"></picture></a>
+  <a href="https://code.claude.com/docs/en/overview"><img src="docs/assets/agents/claude-code.svg" alt="Claude Code" width="32" height="32"></a>
   &nbsp;&nbsp;
-  <a href="https://developers.openai.com/codex/"><img src="docs/assets/agents/codex.png" alt="Codex" width="32" height="32"></a> Codex
+  <a href="https://developers.openai.com/codex/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" alt="Codex" width="32" height="32"></picture></a>
   &nbsp;&nbsp;
-  <a href="https://cursor.com"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor-light.svg" alt="Cursor" height="30"></picture></a> Cursor
+  <a href="https://cursor.com"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" alt="Cursor" width="32" height="32"></picture></a>
   &nbsp;&nbsp;
-  <a href="https://openclaw.ai"><img src="docs/assets/agents/openclaw.svg" alt="OpenClaw" width="32" height="32"></a> OpenClaw
+  <a href="https://openclaw.ai"><img src="docs/assets/agents/openclaw.svg" alt="OpenClaw" width="32" height="32"></a>
 </p>
 
 You need an agent that can read `SKILL.md`, execute local commands, and access an authorized data source, plus **Git, Node.js 22.12+, and a modern browser**. The gallery terminal and agent must be able to reach the same folder and `127.0.0.1` service.
@@ -174,4 +174,4 @@ Built with strict TypeScript, React, Vite, and a Node HTTP service, with no sepa
 
 [MIT License](LICENSE). Created by [Milton / HeYan](https://github.com/MiltonHeYan); contributions are welcome. MIT covers this project's code and original examples, not rights to third-party posts, media, or trademarks.
 
-xstash is an independent open-source project. Claude, Codex, Cursor, OpenClaw, X, and CoreSpeed names and marks belong to their respective owners. [Official asset sources](docs/assets/agents/README.md). They identify compatible tools and do not imply official partnership, certification, or endorsement. Current service pricing, permissions, and terms apply.
+xstash is an independent open-source project. Claude, Codex, Cursor, OpenClaw, X, and CoreSpeed names and marks belong to their respective owners. [Asset sources](docs/assets/agents/README.md). They identify compatible tools and do not imply official partnership, certification, or endorsement. Current service pricing, permissions, and terms apply.

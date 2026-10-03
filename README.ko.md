@@ -13,13 +13,13 @@ xstash는 [Milton / HeYan](https://github.com/MiltonHeYan)이 시작한 **MIT �
 ## Step 1: 호환되는 Agent 준비
 
 <p>
-  <a href="https://code.claude.com/docs/en/overview"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/claude-code-dark.svg"><img src="docs/assets/agents/claude-code-light.svg" alt="Claude Code" height="22"></picture></a>
+  <a href="https://code.claude.com/docs/en/overview"><img src="docs/assets/agents/claude-code.svg" alt="Claude Code" width="32" height="32"></a>
   &nbsp;&nbsp;
-  <a href="https://developers.openai.com/codex/"><img src="docs/assets/agents/codex.png" alt="Codex" width="32" height="32"></a> Codex
+  <a href="https://developers.openai.com/codex/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" alt="Codex" width="32" height="32"></picture></a>
   &nbsp;&nbsp;
-  <a href="https://cursor.com"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor-light.svg" alt="Cursor" height="30"></picture></a> Cursor
+  <a href="https://cursor.com"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" alt="Cursor" width="32" height="32"></picture></a>
   &nbsp;&nbsp;
-  <a href="https://openclaw.ai"><img src="docs/assets/agents/openclaw.svg" alt="OpenClaw" width="32" height="32"></a> OpenClaw
+  <a href="https://openclaw.ai"><img src="docs/assets/agents/openclaw.svg" alt="OpenClaw" width="32" height="32"></a>
 </p>
 
 `SKILL.md`를 읽고, 로컬 명령을 실행하고, 접근 권한을 받은 데이터 소스에 연결할 수 있는 Agent와 **Git, Node.js 22.12+, 최신 브라우저**가 필요합니다. 갤러리를 실행하는 터미널과 Agent는 같은 폴더와 `127.0.0.1` 서비스에 접근할 수 있어야 합니다.
@@ -174,4 +174,4 @@ npm run build
 
 [MIT License](LICENSE). [Milton / HeYan](https://github.com/MiltonHeYan)이 시작한 프로젝트이며, 기여를 환영합니다. MIT 라이선스는 이 프로젝트의 코드와 직접 만든 예시에 적용되며, 제3자의 게시물, 미디어, 상표에 대한 사용 권한을 부여하지 않습니다.
 
-xstash는 독립적인 오픈 소스 프로젝트입니다. Claude, Codex, Cursor, OpenClaw, X, CoreSpeed의 이름과 로고는 각 권리자에게 귀속됩니다. [공식 로고 출처](docs/assets/agents/README.md). 표시는 호환 도구를 식별하기 위한 것이며, 공식 제휴, 인증, 보증을 뜻하지 않습니다. 서비스 요금, 권한, 약관은 각 서비스의 최신 안내를 기준으로 합니다.
+xstash는 독립적인 오픈 소스 프로젝트입니다. Claude, Codex, Cursor, OpenClaw, X, CoreSpeed의 이름과 로고는 각 권리자에게 귀속됩니다. [로고 출처](docs/assets/agents/README.md). 표시는 호환 도구를 식별하기 위한 것이며, 공식 제휴, 인증, 보증을 뜻하지 않습니다. 서비스 요금, 권한, 약관은 각 서비스의 최신 안내를 기준으로 합니다.
