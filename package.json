@@ -1,0 +1,38 @@
+{
+  "name": "commonplace-bookmark-gallery",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Your bookmarks, beautifully kept. Local-first, bring-your-own-agent X bookmark gallery.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check server.mjs && node --check cli.mjs && node --check public/app.js && node --check public/demo.js && node --check lib/bookmarks.mjs && node --check lib/store.mjs && node --check scripts/build.mjs && node --check scripts/test-ui.mjs && node --check scripts/agent-bridge.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "license": "MIT",
+  "keywords": [
+    "bookmarks",
+    "x",
+    "local-first",
+    "bring-your-own-agent",
+    "corespeed"
+  ],
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "cli.mjs",
+    "server.mjs",
+    "lib/",
+    "public/",
+    "scripts/",
+    "tests/",
+    "docs/",
+    "examples/"
+  ]
+}

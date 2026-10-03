@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+      "id": "sample-raw-post",
+      "text": "Fictional X-shaped response for testing. It does not come from an X account.",
+      "author_id": "sample-raw-author",
+      "created_at": "2026-01-05T12:00:00Z"
+    }
+  ],
+  "meta": {
+    "result_count": 1,
+    "next_token": "SYNTHETIC_TOKEN_NOT_USABLE"
+  }
+}

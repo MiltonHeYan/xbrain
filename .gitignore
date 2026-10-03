@@ -1,0 +1,9 @@
+data/
+dist/
+*.log
+*.pid
+node_modules/
+.env*
+.sites-runtime/
+qa-artifacts/
+.DS_Store

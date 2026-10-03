@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "provider": "x",
+    "coverage": "partial",
+    "synthetic": true
+  },
+  "bookmarks": [
+    {
+      "id": "sample-small-components",
+      "text": "This is a fictional example. Small components are easier to understand when their responsibilities are explicit.",
+      "author": { "name": "Fictional Example Author", "username": "" },
+      "url": "",
+      "createdAt": "2026-01-01T10:00:00Z",
+      "savedAt": "2026-01-02T10:00:00Z",
+      "tags": ["Engineering", "Testing"],
+      "summary": "Fictional sample summary: give each small component a clear responsibility.",
+      "media": [],
+      "note": "Synthetic input for trying Commonplace. No real post or person.",
+      "favorite": true,
+      "enrichment": { "kind": "imported" }
+    },
+    {
+      "id": "sample-local-data",
+      "text": "This is a fictional example. Keep portable copies of the ideas you want to revisit.",
+      "author": { "name": "Fictional Sample Writer", "username": "" },
+      "url": "",
+      "createdAt": "2026-01-03T09:00:00Z",
+      "savedAt": "2026-01-04T09:00:00Z",
+      "tags": ["Tools", "Writing"],
+      "summary": "Fictional sample summary: portable backups make a collection easier to keep.",
+      "media": [],
+      "note": "",
+      "favorite": false,
+      "enrichment": { "kind": "imported" }
+    },
+    {
+      "id": "sample-unannotated",
+      "text": "This is a fictional raw record with no summary, tags, author expansion, or media. Missing information stays missing."
+    }
+  ]
+}
