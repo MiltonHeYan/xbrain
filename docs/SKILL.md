@@ -60,7 +60,7 @@ Only set `kind: agent` if you actually generated the summary/tags, with the real
 
 ## 4. Import locally and verify
 
-From the repository directory:
+From the repository directory (first run `npm ci` and `npm run build` after cloning or updating):
 
 ```sh
 node cli.mjs import /private/path/bookmarks.json

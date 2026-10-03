@@ -1,18 +1,20 @@
 # Fresh-agent installation and acceptance
 
 The distributable skill is the WHOLE `xstash/` folder, with its root
-`SKILL.md`, scripts, lib, public, CLI and server. Do not install only the old
+`SKILL.md`, src/, scripts, lib compatibility entrypoints, CLI and server. Do not install only the old
 docs/SKILL.md. An existing project can be invoked by absolute SKILL.md path with
 no global installation. For automatic discovery, copy the clean source folder
 into the chosen client's supported skills directory as `xstash` only
 after the user selects that scope; never overwrite an existing installation.
-Exclude data/, *.log, local-server.pid, qa-artifacts/, node_modules/ and dist/.
+Exclude data/, *.log, local-server.pid, qa-artifacts/, node_modules/, .build/ and dist/.
 Keep the existing running gallery as the explicit destination even if the skill
 is copied elsewhere. This package does not silently register MCP or copy tokens.
 
+Run `npm ci` and `npm run build` in the skill folder first. `npm start` builds and starts the app in one command.
+
 Minimum environment:
 - Fresh conversation, no resume/forked history or persistent-memory retrieval.
-- Mac executor with Node >=22, read access to this skill, loopback HTTP access.
+- Mac executor with Node >=22.12, read access to this skill, loopback HTTP access.
 - Existing CoreSpeed authorization exposed in this SAME agent, with current
   accounts_list and twitter get_my_bookmarks schemas. No raw key handoff.
 - User approval to read their personal bookmarks, summarize and import locally.

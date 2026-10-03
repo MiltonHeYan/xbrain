@@ -1,75 +1,52 @@
 # Testing / 验证说明
 
-运行应用、构建静态文件和核心测试都不需要安装依赖。下面的 DOM 模拟是可选的开发检查，额外使用临时目录中的 JSDOM；它不会给应用添加运行时依赖。
-
-## Core checks
-
-From the project directory with Node.js 22+:
+Use Node.js 22.12+ and `npm ci` to install the locked local toolchain.
 
 ```sh
-npm run check
+npm run typecheck
 npm test
-npm run build
+npm start
 ```
 
-`check` validates JavaScript syntax. `test` uses Node's built-in test runner for
-normalization, merge rules, source/provenance handling, persistence, CLI behavior,
-backup restoration and local HTTP request validation. `build` regenerates static
-assets in `dist/`; it does not publish them. All fixtures must be synthetic.
+`typecheck` checks shared models, all React components, server, store, CLI, bridge,
+React tests and build configuration under strict TypeScript plus unchecked-index
+checks. There is no `any` escape or unchecked JavaScript application implementation.
+Small `.mjs` entrypoints only launch compiled code or the build/test tools.
 
-Do not report these checks as proof of actual browser rendering or accessibility.
-
-## Optional DOM interaction checks
-
-On macOS / Linux, install the test-only package into a temporary directory, then
-run the included harness from the project directory:
+`npm test` builds the app, runs all 53 pre-migration Node regressions through the
+compatibility entrypoints, then runs React Testing Library/Vitest tests in JSDOM.
+The original 25 DOM scenarios are retained as component behavior tests, with
+additional migration regressions. These exercise React itself instead of extracting
+functions from an old JavaScript file. JSDOM remains a simulation, not pixel QA.
 
 ```sh
-npm install --prefix /tmp/commonplace-ui-tests --cache /tmp/commonplace-ui-tests/cache jsdom --no-audit --no-fund
-UI_TEST_JSDOM=/tmp/commonplace-ui-tests/node_modules/jsdom/lib/api.js node scripts/test-ui.mjs
+npm run test:core  # after npm run build
+npm run test:ui
+node scripts/test-ui.mjs  # compatibility alias
 ```
 
-You may append a report path. Its parent directory must already exist; do not
-choose an existing report you need to keep, because the harness writes that file.
+All committed fixtures are synthetic. HTTP tests start `PORT=0` with independent
+private temporary stores and clean up their processes/files. Never point test
+suites at the user's active library.
 
-```sh
-UI_TEST_JSDOM=/tmp/commonplace-ui-tests/node_modules/jsdom/lib/api.js node scripts/test-ui.mjs /tmp/commonplace-ui-report.json
-```
+## Browser and fresh-agent acceptance
 
-On other platforms, install JSDOM in a scratch directory and set `UI_TEST_JSDOM`
-to the absolute path of its `node_modules/jsdom/lib/api.js`. Without that variable,
-the harness attempts a normal `jsdom` module import. If JSDOM is unavailable, it
-exits with an explanatory message and code 2. JSDOM is not required by `npm test`.
+Use an isolated loopback server with an explicit private `BOOKMARK_STORE` and
+synthetic records for screenshots. Verify desktop and mobile-sized layouts,
+search/topic/favorite filtering, list/grid, no-result recovery, keyboard focus,
+import errors and duplicates, detail cancel/save, export/download, refresh and
+sample/library separation. Images must remain absent until session-only opt-in.
 
-The harness simulates 25 interactions/conditions with synthetic data, including:
+Follow [CLEAN_AGENT_ACCEPTANCE.md](CLEAN_AGENT_ACCEPTANCE.md) in a fresh agent
+context against an isolated server for authorized live-import acceptance. Compare
+first import, read-back, annotations and duplicate counts. Keep live input files
+outside the repository. Do not report simulated passes as browser or live-agent
+success. Record any unavailable check explicitly.
 
-- Empty local library versus fictional static demo
-- Import errors, cancel/reopen, guide/back, and replacing samples on first import
-- Remote images absent until session-only opt-in
-- Search, favorites, mobile collection selection, editing and canceled edits
-- Note-only edits preserving provenance and annotation edits becoming user-owned
-- Export data shape, refresh persistence, and re-import preserving local edits
-- Quota/API/corrupt-storage failures preserving data rather than silently resetting
+## Data migration
 
-Fetch, browser storage, dialogs and download interactions are simulated. Passing
-this harness is **DOM simulation coverage**, not real-browser, viewport, visual,
-screenshot, network-permission, or actual-download verification.
-
-## Actual browser review
-
-Use a supported browser against the local server, or a trusted private static
-preview. Check desktop and narrow/mobile layouts with real pixels and keyboard
-interaction. Confirm that dialogs fit, focus is visible, buttons are reachable,
-long content wraps, and no horizontal overflow hides controls. Check:
-
-1. Cold start, empty state, synthetic sample collection, and returning to the library
-2. Valid/invalid imports, duplicate imports, canceled import drafts, and guide/back
-3. Editing/canceling details, note-only changes, annotations, favorites and refresh
-4. Search/sort/topic filters, no-result recovery, mobile navigation and export
-5. Actual downloaded JSON and restoring it into a separate test library
-6. External image requests remain absent until explicit opt-in
-7. Server errors, corrupted browser storage and quota failures do not reset data
-
-Use only fictional accounts/posts in screenshots, reports and shared previews.
-If a browser/environment restriction prevents a check, name that limit and leave
-that check unverified rather than substituting a simulated pass.
+The v1 JSON envelope and browser storage key `commonplace.library.v1` are unchanged.
+Back up the user's library (private permissions), verify its hash, and test against
+a private COPY. Source updates and reads must not rewrite the original store.
+Default datastore paths still resolve from the project root, not the shell cwd or
+`.build/`. No migration script resets or upgrades the data schema.

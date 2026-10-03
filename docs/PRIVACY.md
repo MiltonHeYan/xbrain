@@ -116,9 +116,9 @@ content must not become test fixtures, demo cards, committed files, screenshots,
 or public build assets. The `data/` directory, environment files, logs and QA
 artifacts are ignored, but ignore rules alone do not sanitize an archive.
 
-Review actual archive contents before sharing. Only `public/` and the shared
-importer are copied into `dist/`; do not put personal JSON anywhere under those
-paths. Building does not publish the site. Publication and any sharing of real
+Review actual archive contents before sharing. Only the Vite client bundle, styles, and compiled shared importer go into
+`dist/`; do not put personal JSON under `src/` or other source paths.
+`.build/` contains compiled service/client code and is also excluded from Git. Building does not publish the site. Publication and any sharing of real
 collection data are separate decisions.
 
 This prototype has not undergone an independent security audit. No security

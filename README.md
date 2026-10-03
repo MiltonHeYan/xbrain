@@ -4,7 +4,7 @@ Formerly Commonplace. Existing local libraries remain compatible.
 
 **把值得保存的内容，变成值得回看的收藏。**
 
-一个本地优先、零运行时依赖的 X 书签画廊原型。带上你自己的 Agent 和 CoreSpeed MCP：Agent 读取授权账号的书签，按需整理摘要与标签；xstash 负责导入、浏览、搜索和保存。
+一个本地优先的 X 书签画廊，使用严格 TypeScript、React、Vite 和轻量 Node HTTP 服务。带上你自己的 Agent 和 CoreSpeed MCP：Agent 读取授权账号的书签，按需整理摘要与标签；xstash 负责导入、浏览、搜索和保存。
 
 没有内置模型、模型 API Key 输入框或 X 登录。即使没有 Agent，你也可以直接导入兼容的 JSON。
 
@@ -12,16 +12,17 @@ Formerly Commonplace. Existing local libraries remain compatible.
 
 ## 安装 Skill 并整理自己的书签
 
-需要 Node.js 22+、一个能执行本地命令的 Agent，以及该 Agent 中已授权的
+需要 Node.js 22.12+、一个能执行本地命令的 Agent，以及该 Agent 中已授权的
 CoreSpeed MCP 和个人 X 连接。xstash 不保存这些服务的密钥。
 
 ```sh
 git clone https://github.com/MiltonHeYan/xstash.git
 cd xstash
+npm ci
 npm start
 ```
 
-无需 `npm install`。把本目录的 `SKILL.md` **绝对路径**交给一个新 Agent；
+首次执行 `npm ci` 安装项目依赖。把本目录的 `SKILL.md` **绝对路径**交给一个新 Agent；
 保留整个目录，不要只复制 Skill 文件。可直接这样说：
 
 > 使用 /绝对路径/xstash/SKILL.md，通过我在当前 Agent
@@ -37,12 +38,13 @@ MCP 安装和 OAuth 授权按 [CoreSpeed 当前官方说明](https://corespeed.i
 
 ## 先跑起来
 
-需要 **Node.js 22 或更新版本**和现代浏览器。无需 `npm install`，没有数据库或构建依赖。
+需要 **Node.js 22.12 或更新版本**和现代浏览器。首次运行 `npm ci` 安装锁定依赖；之后统一使用 `npm start`，自动编译并启动。没有数据库或额外后台服务。
 
 解压源码包后，在项目目录运行：
 
 ```sh
 cd xstash
+npm ci
 npm start
 ```
 
@@ -89,6 +91,14 @@ node cli.mjs stats
 2026-10-02 验证的 `twitter__get_my_bookmarks` schema 只有 `account` 和 `max_results`。返回值可能带 `next_token`，但该版本没有接收它的输入参数。因此本流程是**部分书签快照**，不是全历史同步。运行前应重新查看实际 schema；不要自行构造分页参数。
 
 验证的样本没有作者和图片展开数据。缺少的作者会显示为未知，图片不会凭空生成。可在用户授权范围内按需读取额外元数据，但不能把未经验证的内容补成事实。X、CoreSpeed 或 Agent 服务可能有额度、费用与账号权限限制；本项目不包含这些服务。
+
+## 从旧版升级
+
+先备份原 `data/bookmarks.json`，不要覆盖或删除它。在新目录运行时，可使用
+`BOOKMARK_STORE=/绝对路径/原项目/data/bookmarks.json npm start` 明确选择旧库；
+首次验收请使用私人备份副本。v1 JSON 和浏览器 `commonplace.library.v1` 存储键
+不变，不需要转换数据。`npm start` 在项目根目录构建 `.build/` 和 `dist/`；
+构建不读取或打包私人 `data/`。CLI/桥接单独执行前先运行 `npm run build`。
 
 ## CLI 与备份
 
@@ -152,20 +162,23 @@ npm run build
 
 ## 开发与验证
 
+架构与贡献边界见 [ARCHITECTURE.md](docs/ARCHITECTURE.md)。
+
 ```sh
 npm run check
 npm test
 npm run build
 ```
 
-- `public/`：浏览器界面和虚构演示数据
-- `lib/bookmarks.mjs`：两种运行方式共用的归一化、校验与合并逻辑
-- `lib/store.mjs`：原子文件写入与进程间锁
-- `server.mjs` / `cli.mjs`：本地 HTTP 服务和命令行入口
+- `src/client/`：React 界面、组件、样例和浏览器数据适配
+- `src/shared/`：严格数据模型、归一化、校验和合并逻辑
+- `src/server/`：原生 Node HTTP 服务、CLI、原子文件写入与进程间锁
+- `src/agent/bridge.ts`：仅向显式 loopback origin 导入并读回核验
+- `server.mjs` / `cli.mjs` / `scripts/agent-bridge.mjs`：保留的兼容入口，执行编译后的 TypeScript
 - `tests/`：导入、合并、CLI 和 HTTP 测试
 - `docs/` / `examples/`：工作流、格式说明与纯虚构输入
 
-核心测试不需要 X 账号、CoreSpeed 凭据或额外依赖。可选 JSDOM 检查需要单独的临时测试依赖；它只是 DOM 模拟。完整 UI 回归仍应在真实浏览器中验证。参见 [验证说明](docs/TESTING.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md)。
+测试不需要 X 账号或 CoreSpeed 凭据。`npm test` 先构建，再运行原有 Node 回归及 React Testing Library/Vitest 组件回归。JSDOM 仍属于模拟，不能替代真实浏览器验收。参见 [验证说明](docs/TESTING.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 许可与状态
 
@@ -177,16 +190,17 @@ npm run build
 
 ## English: install the skill and use your bookmarks
 
-Requirements: Node.js 22+, an agent with local command execution, and an authorized
+Requirements: Node.js 22.12+, an agent with local command execution, and an authorized
 CoreSpeed MCP connection with your personal X account in that same agent.
 
 ```sh
 git clone https://github.com/MiltonHeYan/xstash.git
 cd xstash
+npm ci
 npm start
 ```
 
-No `npm install` is needed. Give a fresh agent the absolute path to the root
+Install the locked project dependencies with `npm ci` once. Give a fresh agent the absolute path to the root
 `SKILL.md` and keep the entire source folder together. For example:
 
 > Use /absolute/path/xstash/SKILL.md. With my authorized
@@ -204,9 +218,13 @@ bridge; the user does not need to manually import a demo file.
 
 ## Validation / 验收状态
 
-- 53 automated tests passed, including isolated HTTP bridge tests; syntax checks
-  and static build passed. Automated fixtures are synthetic.
-- Independent fresh-agent acceptance used five actual authorized bookmarks and
+- Migration validation: strict TypeScript (application, React tests and config),
+  Vite production build, 55 Node regressions and 31 React component tests passed.
+  This retains all 53 original Node tests and all 25 original DOM scenarios, plus
+  migration regressions. Committed fixtures are synthetic. Run `npm run typecheck`
+  and `npm test` for the current checkout.
+- Independent fresh-agent acceptance against the TypeScript migration used five
+  actual authorized bookmarks and
   a private, initially empty store with `BOOKMARK_STORE` and `PORT=0`. The first
   import added five; read-back and generated annotation matches were 5/5.
   A repeat added zero; total and unique IDs remained five. API and stored fields
@@ -220,14 +238,24 @@ bridge; the user does not need to manually import a demo file.
 独立验收通过了真实读取、空库首次新增、摘要标签写入、读回和重复去重；
 测试未改变原有私人库。尚未完成真实浏览器视觉/响应式验收。
 
+## Upgrading from v0.1
+
+Back up the old `data/bookmarks.json` first. The v1 JSON format and browser storage
+key remain unchanged; there is no data rewrite or reset. Validate against a private
+copy before switching. To use a specific existing library, run
+`BOOKMARK_STORE=/absolute/private/path/bookmarks.json npm start`.
+Build outputs `.build/` and `dist/` never include `data/`. Direct CLI/bridge commands
+require `npm run build` after installation or source updates.
+
 ## English quick start
 
 xstash is a local-first X bookmark gallery. Bring your own agent and CoreSpeed MCP connection; the agent fetches authorized bookmarks and optionally adds grounded summaries and tags. The gallery itself makes no model calls and stores no service credentials.
 
-**Requirements:** Node.js 22+ and a modern browser. No dependency installation is needed.
+**Requirements:** Node.js 22.12+ and a modern browser. Run `npm ci` once. `npm start` compiles the TypeScript service, builds the React UI with Vite, and starts the loopback server. No database or extra background service is required.
 
 ```sh
 cd xstash
+npm ci
 npm start
 # Open http://127.0.0.1:4317
 ```
