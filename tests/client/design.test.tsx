@@ -80,3 +80,22 @@ test('missing store and empty search are explicit; source strings cannot execute
   render(<DesignGraph />);
   expect(await screen.findByRole('alert')).toHaveTextContent('Select a memory store.');
 });
+
+test('a JSON 404 preserves the missing-reference error instead of claiming the API is absent', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({error: 'Reference not found in this collection.'}), {
+        status: 404,
+        headers: {'Content-Type': 'application/json'},
+      }),
+    ),
+  );
+  render(<DesignGraph focusId="deleted-synthetic-reference" />);
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    'Reference not found in this collection.',
+  );
+  expect(
+    screen.queryByText('Graph requires the local server with MEMORY_STORE configured.'),
+  ).not.toBeInTheDocument();
+});

@@ -181,3 +181,59 @@ test('an existing legacy capture hash is reconciled without dropping analysis or
     after.ingestion.captures[r.id].revision,
   );
 });
+
+test('Gallery preserves case-insensitive AND substring search over the complete source', async (t) => {
+  const store = join(await temporary(t), 'memory.json');
+  const records = Array.from({length: 150}, (_, i) => ({
+    ...fixture(String(i + 2000)),
+    title: `Reference ${i}`,
+    text: 'Fictional text',
+    summary: '',
+  }));
+  records[149].text = 'Calm OAK finishes';
+  records[149].summary = 'Warm interiors';
+  await putResources(store, records);
+  const server = await startServer(t, {MEMORY_STORE: store});
+  for (const q of ['refer', 'calm oa', 'WARM oak', 'reference 149']) {
+    const result = await server.request(
+      '/api/references?q=' + encodeURIComponent(q),
+      undefined,
+      'GET',
+    );
+    assert.equal(result.status, 200);
+    assert.equal(result.data.matched, q === 'refer' ? 150 : 1);
+    if (q !== 'refer') assert.equal(result.data.resources[0].id, records[149].id);
+  }
+  const missing = await server.request(
+    '/api/references?q=fictional%20no-such-term',
+    undefined,
+    'GET',
+  );
+  assert.equal(missing.data.matched, 0);
+});
+
+test('normalizing a previously synced legacy X URL resends once and then skips after acknowledgement', async (t) => {
+  const dir = await temporary(t),
+    store = join(dir, 'memory.json'),
+    target = join(dir, 'provider-memory.json'),
+    config = join(dir, 'provider.json');
+  const r = fixture('123456789');
+  await putResources(store, [r]);
+  await writeFile(config, JSON.stringify({kind: 'file', scope: 'personal', path: target}));
+  const provider = await loadProvider(config, store);
+  assert.equal((await syncResources(store, provider, 'all')).confirmed, 1);
+  // Recreate the bytes and receipt a pre-normalization version would have stored.
+  const local = JSON.parse(await readFile(store, 'utf8'));
+  const remote = JSON.parse(await readFile(target, 'utf8'));
+  for (const data of [local, remote])
+    data.resources[0].source.url = 'https://twitter.com/fictional/status/123456789';
+  local.receipts[provider.key][r.id] = digest(local.resources[0]);
+  await writeFile(store, JSON.stringify(local));
+  await writeFile(target, JSON.stringify(remote));
+  assert.equal((await syncResources(store, provider, 'all')).confirmed, 1);
+  assert.equal((await syncResources(store, provider, 'all')).unchanged, 1);
+  assert.equal((await readMemory(target)).resources.length, 1);
+  const after = await readMemory(store);
+  assert.deepEqual(after.resources[0].design, r.design);
+  assert.equal(Object.keys(after.ingestion.pending).length, 0);
+});

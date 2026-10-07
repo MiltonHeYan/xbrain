@@ -115,6 +115,7 @@ export function Workspace() {
         {visited.gallery &&
           (shared ? (
             <ReferenceGallery
+              active={view === 'gallery'}
               data={shared}
               onGraph={(id) => {
                 setFocusId(id);

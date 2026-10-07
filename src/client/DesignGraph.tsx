@@ -49,6 +49,7 @@ export function DesignGraph({
   const controls = useRef<NetworkControls | null>(null),
     stage = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    setError('');
     if (providedData) {
       setData(providedData);
       return;
@@ -157,7 +158,9 @@ export function DesignGraph({
       )}
       {error && <p role="alert">{error}</p>}
       {!data ? (
-        <p role="status">Loading design memory…</p>
+        error ? null : (
+          <p role="status">Loading design memory…</p>
+        )
       ) : (
         <>
           <div className="design-stats">

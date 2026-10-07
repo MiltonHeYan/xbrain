@@ -1,5 +1,5 @@
 import {readReferencePage} from './http.js';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {ReferencePage} from '../shared/design-graph.js';
 function SourceImage({url, title}: {url: string; title: string}) {
   const [failed, setFailed] = useState(false);
@@ -18,8 +18,10 @@ function SourceImage({url, title}: {url: string; title: string}) {
 export function ReferenceGallery({
   data,
   onGraph,
+  active = true,
 }: {
   data: ReferencePage;
+  active?: boolean;
   onGraph: (id: string) => void;
 }) {
   const [query, setQuery] = useState(''),
@@ -34,9 +36,25 @@ export function ReferenceGallery({
     [error, setError] = useState(''),
     [loading, setLoading] = useState(false),
     [offset, setOffset] = useState(0);
+  const completed = useRef<{data: ReferencePage; query: string; offset: number} | null>(null);
   useEffect(() => {
+    if (!active) {
+      setLoading(false);
+      return;
+    }
     if (!query.trim() && offset === 0) {
+      completed.current = null;
       setPage(data);
+      setLoading(false);
+      setError('');
+      return;
+    }
+    // Returning to a completed page must not refetch and append it twice.
+    if (
+      completed.current?.data === data &&
+      completed.current.query === query &&
+      completed.current.offset === offset
+    ) {
       setLoading(false);
       setError('');
       return;
@@ -44,24 +62,34 @@ export function ReferenceGallery({
     const abort = new AbortController();
     setLoading(true);
     setError('');
-    fetch(`/api/references?q=${encodeURIComponent(query)}&offset=${offset}`, {signal: abort.signal})
-      .then(readReferencePage)
-      .then((result) => {
-        if (abort.signal.aborted) return;
-        const next = result;
-        setPage((previous) =>
-          offset ? {...next, resources: [...previous.resources, ...next.resources]} : next,
-        );
-      })
-      .catch((e) => {
-        if (!abort.signal.aborted)
-          setError(e instanceof Error ? e.message : 'Could not load references.');
-      })
-      .finally(() => {
-        if (!abort.signal.aborted) setLoading(false);
-      });
-    return () => abort.abort();
-  }, [data, query, offset]);
+    const timer = window.setTimeout(
+      () => {
+        fetch(`/api/references?q=${encodeURIComponent(query)}&offset=${offset}`, {
+          signal: abort.signal,
+        })
+          .then(readReferencePage)
+          .then((next) => {
+            if (abort.signal.aborted) return;
+            completed.current = {data, query, offset};
+            setPage((previous) =>
+              offset ? {...next, resources: [...previous.resources, ...next.resources]} : next,
+            );
+          })
+          .catch((e) => {
+            if (!abort.signal.aborted)
+              setError(e instanceof Error ? e.message : 'Could not load references.');
+          })
+          .finally(() => {
+            if (!abort.signal.aborted) setLoading(false);
+          });
+      },
+      offset === 0 ? 300 : 0,
+    );
+    return () => {
+      window.clearTimeout(timer);
+      abort.abort();
+    };
+  }, [active, data, query, offset]);
   const resources = page.resources;
   return (
     <main className="reference-gallery">

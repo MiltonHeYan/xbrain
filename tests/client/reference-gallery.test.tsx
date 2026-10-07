@@ -67,6 +67,7 @@ test('late search responses cannot replace newer results and failed queries rema
   );
   const {container} = render(<ReferenceGallery data={first} onGraph={() => {}} />);
   fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'slow'}});
+  await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledTimes(1));
   fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'newer'}});
   await waitFor(() => expect(container.querySelectorAll('[data-resource-id]')).toHaveLength(1));
   await act(async () =>
@@ -83,4 +84,81 @@ test('late search responses cannot replace newer results and failed queries rema
   );
   fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'error'}});
   expect(await screen.findByRole('alert')).toHaveTextContent('Synthetic unavailable');
+});
+
+test('rapid typing is debounced and clearing cancels the scheduled search', async () => {
+  vi.useFakeTimers();
+  try {
+    const fetch = vi
+      .fn()
+      .mockResolvedValue(
+        response({...first, resources: [records[149]], matched: 1, hasMore: false}),
+      );
+    vi.stubGlobal('fetch', fetch);
+    render(<ReferenceGallery data={first} onGraph={() => {}} />);
+    for (const value of ['c', 'ca', 'calm', 'calm oak']) {
+      fireEvent.change(screen.getByRole('searchbox'), {target: {value}});
+      await act(async () => vi.advanceTimersByTimeAsync(50));
+    }
+    expect(fetch).not.toHaveBeenCalled();
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(1);
+    fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'next'}});
+    fireEvent.change(screen.getByRole('searchbox'), {target: {value: ''}});
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(1);
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
+test('leaving Gallery cancels timers and in-flight results; returning retains completed pages', async () => {
+  vi.useFakeTimers();
+  try {
+    let release!: (r: Response) => void;
+    const slow = new Promise<Response>((r) => {
+      release = r;
+    });
+    const fetch = vi
+      .fn()
+      .mockReturnValueOnce(slow)
+      .mockResolvedValue(
+        response({...first, resources: [records[149]], matched: 1, hasMore: false}),
+      );
+    vi.stubGlobal('fetch', fetch);
+    const onGraph = () => {};
+    const view = render(<ReferenceGallery data={first} onGraph={onGraph} />);
+    fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'slow'}});
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(1);
+    view.rerender(<ReferenceGallery data={first} onGraph={onGraph} active={false} />);
+    expect(fetch.mock.calls[0]![1].signal.aborted).toBe(true);
+    await act(async () =>
+      release(response({...first, resources: [records[0]], matched: 1, hasMore: false})),
+    );
+    expect(screen.queryByText('1 of 1 matches', {exact: false})).not.toBeInTheDocument();
+    view.rerender(<ReferenceGallery data={first} onGraph={onGraph} />);
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(screen.getByText('Fictional 149')).toBeInTheDocument();
+    view.rerender(<ReferenceGallery data={first} onGraph={onGraph} active={false} />);
+    view.rerender(<ReferenceGallery data={first} onGraph={onGraph} />);
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'other'}});
+    fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'slow'}});
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    fireEvent.change(screen.getByRole('searchbox'), {target: {value: 'cancel on hide'}});
+    view.rerender(<ReferenceGallery data={first} onGraph={onGraph} active={false} />);
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    view.rerender(<ReferenceGallery data={first} onGraph={onGraph} />);
+    view.unmount();
+    await act(async () => vi.advanceTimersByTimeAsync(300));
+    expect(fetch).toHaveBeenCalledTimes(2);
+  } finally {
+    vi.useRealTimers();
+  }
 });

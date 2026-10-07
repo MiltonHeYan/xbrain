@@ -2,10 +2,9 @@ import type {ReferencePage} from '../shared/design-graph.js';
 import {isObject} from '../shared/types.js';
 /** Static hosts often answer missing API routes with the application's HTML shell. */
 export function apiUnavailable(response: Response): boolean {
-  return (
-    response.status === 404 ||
-    (response.ok && !!response.headers?.get('content-type')?.toLowerCase().includes('text/html'))
-  );
+  const type = response.headers?.get('content-type')?.toLowerCase() ?? '';
+  const json = type.includes('application/json') || type.includes('+json');
+  return (response.status === 404 && !json) || (response.ok && type.includes('text/html'));
 }
 export async function readApiJson(response: Response): Promise<unknown> {
   let data: unknown;

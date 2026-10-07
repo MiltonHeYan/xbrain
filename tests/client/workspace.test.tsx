@@ -150,7 +150,7 @@ test('static HTML response falls back to the existing browser Gallery', async ()
   expect(await screen.findByLabelText('Gallery search')).toBeInTheDocument();
 });
 
-for (const status of [403, 500]) {
+for (const status of [403, 404, 500]) {
   test(`API ${status} error does not fall back to a different library`, async () => {
     vi.stubGlobal(
       'fetch',

@@ -103,10 +103,14 @@ const server = http.createServer(async (req, res) => {
           throw new Error('Search input is too long.');
         const data = await readMemory(path.resolve(process.env.MEMORY_STORE));
         validateDesignFilters(filters);
-        let resources = query.trim()
-          ? searchResources(data.resources, query, 10000, filters).map((x) => x.resource)
-          : data.resources.filter((r) => matchesDesign(r.design, filters));
         if (url.pathname === '/api/references') {
+          // Preserve Gallery's substring semantics over the full collection. The
+          // graph/Agent lexical ranking remains separate from this cheap scan.
+          const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+          const resources = data.resources.filter((r) => {
+            const text = [r.title, r.text, r.summary].join(' ').toLowerCase();
+            return matchesDesign(r.design, filters) && terms.every((term) => text.includes(term));
+          });
           const offset = Number(url.searchParams.get('offset') ?? 0);
           if (!Number.isSafeInteger(offset) || offset < 0 || offset > 10000)
             throw new Error('Invalid reference offset.');
@@ -118,6 +122,9 @@ const server = http.createServer(async (req, res) => {
             hasMore: offset + 100 < resources.length,
           });
         }
+        let resources = query.trim()
+          ? searchResources(data.resources, query, 10000, filters).map((x) => x.resource)
+          : data.resources.filter((r) => matchesDesign(r.design, filters));
         const focusId = url.searchParams.get('id');
         if (focusId) {
           const focus = resources.find((r) => r.id === focusId);
