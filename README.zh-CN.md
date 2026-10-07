@@ -18,6 +18,11 @@
 <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openclaw-mono-dark.svg"><img src="docs/assets/agents/openclaw-mono.svg" width="24" height="24" alt="OpenClaw"></picture>
 </p>
 
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/assets/hero/xrecall-hero-mobile.png">
+  <img src="docs/assets/hero/xrecall-hero.png" width="1200" alt="xrecall 工作流：保存 X 收藏，整理成本地资源记忆，任务中由 Agent 检索相关资料并引用原始来源。">
+</picture>
+
 需要能访问仓库并执行本地命令的 Agent，以及 Git、Node.js 22.12+。同步前需选择可用的数据源并授权个人账号；默认只保存到本地，不自动连接远端 memory。
 
 原名 xstash。已有 checkout 无需改目录或搬迁数据；只需将 origin 更新为 `https://github.com/MiltonHeYan/xrecall.git`。现有 CLI 命令、数据路径、浏览器存储键和 `xstash.*.v1` 协议标识保持兼容；已有 Skill 安装目录也可继续使用。

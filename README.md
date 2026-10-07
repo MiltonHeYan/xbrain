@@ -18,6 +18,11 @@ Read https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md, help me install 
 <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openclaw-mono-dark.svg"><img src="docs/assets/agents/openclaw-mono.svg" width="24" height="24" alt="OpenClaw"></picture>
 </p>
 
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/assets/hero/xrecall-hero-mobile.png">
+  <img src="docs/assets/hero/xrecall-hero.png" width="1200" alt="xrecall workflow: save X bookmarks, distill local resource memory, then retrieve relevant notes and cite sources with your Agent.">
+</picture>
+
 Requires an Agent with repository access and local command execution, Git and Node.js 22.12+. Before syncing, select an available source and authorize your personal account. Data stays local by default; no remote memory is connected automatically.
 
 Previously xstash. Existing checkouts and Skill installation folders can stay in place: update origin to `https://github.com/MiltonHeYan/xrecall.git`. CLI commands, data paths, browser storage keys and `xstash.*.v1` protocol identifiers remain compatible; no data migration is needed.

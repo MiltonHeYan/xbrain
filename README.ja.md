@@ -18,6 +18,11 @@ https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md を読み、xrecall �
 <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openclaw-mono-dark.svg"><img src="docs/assets/agents/openclaw-mono.svg" width="24" height="24" alt="OpenClaw"></picture>
 </p>
 
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/assets/hero/xrecall-hero-mobile.png">
+  <img src="docs/assets/hero/xrecall-hero.png" width="1200" alt="xrecall の流れ：X ブックマークを保存し、ローカルのリソース記憶に整理して、作業時に Agent が関連資料を検索し出典を引用します。">
+</picture>
+
 リポジトリにアクセスしてローカルコマンドを実行できる Agent、Git、Node.js 22.12+ が必要です。同期前に利用可能なデータソースを選び、個人アカウントを認可してください。既定ではローカル保存のみで、外部 memory には自動接続しません。
 
 旧名は xstash です。既存の checkout と Skill インストール先は変更不要です。origin を `https://github.com/MiltonHeYan/xrecall.git` に更新してください。CLI コマンド、データパス、ブラウザーの保存キー、`xstash.*.v1` プロトコル識別子は維持され、データ移行は不要です。
