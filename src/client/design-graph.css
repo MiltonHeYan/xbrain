@@ -1,0 +1,153 @@
+.design-page {
+  max-width: 1440px;
+  margin: auto;
+  padding: 32px;
+  color: #000;
+  background: #fff;
+}
+.design-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid;
+  padding-bottom: 20px;
+}
+.design-header a:first-child {
+  font-size: 24px;
+  font-weight: 700;
+}
+.design-eyebrow {
+  margin-top: 48px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+.design-page h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  letter-spacing: -0.05em;
+  margin: 12px 0;
+}
+.design-controls,
+.design-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin: 24px 0;
+}
+.design-controls label:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+.design-page label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+}
+.design-page input,
+.design-page select,
+.design-page button {
+  font: inherit;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  padding: 12px;
+  min-height: 44px;
+  border-radius: 0;
+}
+.design-page button {
+  cursor: pointer;
+}
+.design-controls button {
+  background: #000;
+  color: #fff;
+}
+.design-toolbar span {
+  font-size: 12px;
+  align-self: center;
+}
+.design-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  border: 1px solid #000;
+}
+.design-canvas {
+  overflow: auto;
+  max-height: 650px;
+  min-height: 420px;
+}
+.design-canvas svg {
+  display: block;
+  font: 12px system-ui;
+}
+.design-node {
+  cursor: pointer;
+}
+.design-node:focus rect {
+  stroke-width: 4;
+  stroke-dasharray: 3 2;
+}
+.design-detail {
+  padding: 20px;
+  border-left: 1px solid #000;
+  max-height: 650px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+.design-detail h2 {
+  font-size: 20px;
+}
+.design-detail img {
+  max-width: 100%;
+  display: block;
+  margin: 12px 0;
+}
+.design-detail article {
+  border-top: 1px solid;
+  padding-top: 16px;
+  margin-top: 20px;
+}
+.design-detail p,
+.design-detail li {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.design-image-toggle {
+  display: block !important;
+}
+.design-image-toggle input {
+  min-height: 0;
+}
+.design-evidence {
+  border-top: 1px dashed;
+  margin-top: 14px;
+  padding-top: 14px;
+}
+.design-page :focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 4px;
+}
+@media (max-width: 760px) {
+  .design-page {
+    padding: 18px;
+  }
+  .design-workspace {
+    grid-template-columns: 1fr;
+  }
+  .design-detail {
+    border-left: 0;
+    border-top: 1px solid;
+    max-height: none;
+  }
+  .design-canvas {
+    max-height: 440px;
+  }
+  .design-controls {
+    align-items: stretch;
+  }
+  .design-controls label {
+    flex: 1;
+  }
+  .design-eyebrow {
+    margin-top: 28px;
+  }
+}

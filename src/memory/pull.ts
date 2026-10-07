@@ -111,6 +111,15 @@ export async function pullResources(
                 'Source fetched or changed; Agent distillation is pending.',
               ]),
             ],
+            ...(old?.design
+              ? {
+                  design: {
+                    ...old.design,
+                    status: 'stale',
+                    reason: 'Source changed; inspect images again before relying on this analysis.',
+                  },
+                }
+              : {}),
             savedReason: old?.savedReason ?? null,
             updatedAt: nextTime(old?.updatedAt),
           });

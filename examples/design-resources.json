@@ -1,0 +1,246 @@
+[
+  {
+    "source": {
+      "provider": "x",
+      "id": "design-demo-0",
+      "url": "https://example.com/fictional-post-0"
+    },
+    "title": "Fictional editorial landing page",
+    "text": "Synthetic test fixture, not a real saved post.",
+    "summary": "",
+    "purpose": "",
+    "useWhen": [],
+    "limitations": [
+      "Fictional fixture; not an observation of a real image."
+    ],
+    "savedReason": null,
+    "updatedAt": "2026-10-07T12:00:00Z",
+    "design": {
+      "status": "analyzed",
+      "images": [
+        {
+          "url": "https://example.com/fictional-design-0.png",
+          "observed": true
+        }
+      ],
+      "features": [
+        {
+          "id": "f1",
+          "kind": "spacing",
+          "value": "generous whitespace",
+          "imageUrl": "https://example.com/fictional-design-0.png",
+          "evidence": "Wide empty margins surround a centered text column."
+        }
+      ],
+      "domains": [
+        {
+          "label": "web-ui",
+          "featureIds": [
+            "f1"
+          ]
+        }
+      ],
+      "styles": [
+        {
+          "label": "minimal editorial",
+          "featureIds": [
+            "f1"
+          ],
+          "confidence": "medium",
+          "confirmation": null
+        }
+      ],
+      "analyzedAt": "2026-10-07T12:00:00Z",
+      "reason": "Synthetic evidence for an isolated demonstration only."
+    }
+  },
+  {
+    "source": {
+      "provider": "x",
+      "id": "design-demo-1",
+      "url": "https://example.com/fictional-post-1"
+    },
+    "title": "Fictional reading app",
+    "text": "Synthetic test fixture, not a real saved post.",
+    "summary": "",
+    "purpose": "",
+    "useWhen": [],
+    "limitations": [
+      "Fictional fixture; not an observation of a real image."
+    ],
+    "savedReason": null,
+    "updatedAt": "2026-10-07T12:00:00Z",
+    "design": {
+      "status": "analyzed",
+      "images": [
+        {
+          "url": "https://example.com/fictional-design-1.png",
+          "observed": true
+        }
+      ],
+      "features": [
+        {
+          "id": "f1",
+          "kind": "spacing",
+          "value": "generous whitespace",
+          "imageUrl": "https://example.com/fictional-design-1.png",
+          "evidence": "Large gaps separate reading controls from paragraphs."
+        }
+      ],
+      "domains": [
+        {
+          "label": "app-ui",
+          "featureIds": [
+            "f1"
+          ]
+        }
+      ],
+      "styles": [
+        {
+          "label": "minimal editorial",
+          "featureIds": [
+            "f1"
+          ],
+          "confidence": "medium",
+          "confirmation": null
+        }
+      ],
+      "analyzedAt": "2026-10-07T12:00:00Z",
+      "reason": "Synthetic evidence for an isolated demonstration only."
+    }
+  },
+  {
+    "source": {
+      "provider": "x",
+      "id": "design-demo-2",
+      "url": "https://example.com/fictional-post-2"
+    },
+    "title": "Fictional quiet room",
+    "text": "Synthetic test fixture, not a real saved post.",
+    "summary": "",
+    "purpose": "",
+    "useWhen": [],
+    "limitations": [
+      "Fictional fixture; not an observation of a real image."
+    ],
+    "savedReason": null,
+    "updatedAt": "2026-10-07T12:00:00Z",
+    "design": {
+      "status": "analyzed",
+      "images": [
+        {
+          "url": "https://example.com/fictional-design-2.png",
+          "observed": true
+        }
+      ],
+      "features": [
+        {
+          "id": "f1",
+          "kind": "material",
+          "value": "warm wood",
+          "imageUrl": "https://example.com/fictional-design-2.png",
+          "evidence": "Visible wood grain covers the low table and wall panels."
+        }
+      ],
+      "domains": [
+        {
+          "label": "interior",
+          "featureIds": [
+            "f1"
+          ]
+        }
+      ],
+      "styles": [
+        {
+          "label": "Japandi",
+          "featureIds": [
+            "f1"
+          ],
+          "confidence": "medium",
+          "confirmation": null
+        }
+      ],
+      "analyzedAt": "2026-10-07T12:00:00Z",
+      "reason": "Synthetic evidence for an isolated demonstration only."
+    }
+  },
+  {
+    "source": {
+      "provider": "x",
+      "id": "design-demo-3",
+      "url": "https://example.com/fictional-post-3"
+    },
+    "title": "Fictional geometric poster",
+    "text": "Synthetic test fixture, not a real saved post.",
+    "summary": "",
+    "purpose": "",
+    "useWhen": [],
+    "limitations": [
+      "Fictional fixture; not an observation of a real image."
+    ],
+    "savedReason": null,
+    "updatedAt": "2026-10-07T12:00:00Z",
+    "design": {
+      "status": "analyzed",
+      "images": [
+        {
+          "url": "https://example.com/fictional-design-3.png",
+          "observed": true
+        }
+      ],
+      "features": [
+        {
+          "id": "f1",
+          "kind": "shape",
+          "value": "angular shapes",
+          "imageUrl": "https://example.com/fictional-design-3.png",
+          "evidence": "Overlapping triangles form the central composition."
+        }
+      ],
+      "domains": [
+        {
+          "label": "graphic",
+          "featureIds": [
+            "f1"
+          ]
+        }
+      ],
+      "styles": [
+        {
+          "label": "geometric modernism",
+          "featureIds": [
+            "f1"
+          ],
+          "confidence": "medium",
+          "confirmation": null
+        }
+      ],
+      "analyzedAt": "2026-10-07T12:00:00Z",
+      "reason": "Synthetic evidence for an isolated demonstration only."
+    }
+  },
+  {
+    "source": {
+      "provider": "x",
+      "id": "design-demo-unavailable",
+      "url": "https://example.com/fictional-unavailable"
+    },
+    "title": "Fictional unavailable image",
+    "text": "The post claims a Scandinavian style; image not accessible.",
+    "summary": "",
+    "purpose": "",
+    "useWhen": [],
+    "limitations": [],
+    "savedReason": null,
+    "updatedAt": "2026-10-07T12:00:00Z",
+    "design": {
+      "status": "unanalyzed",
+      "images": [],
+      "features": [],
+      "domains": [],
+      "styles": [],
+      "analyzedAt": null,
+      "reason": "No image available; text is not visual evidence."
+    }
+  }
+]

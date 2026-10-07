@@ -129,3 +129,14 @@ Return complete valid resources, at most 50, with no duplicates. xrecall hides l
 ## Verification boundary
 
 The automated suite uses only fictional resources, temporary files and a local mock command. It covers source-ID deduplication, newer updates/stale rejection, delete propagation, retry receipts, local/remote candidate retrieval, original citations, unknown save reasons and unchanged gallery bytes. It does not validate a particular external service, current connector capabilities, live X access or background Agent recall. Choose a real personal memory service and inspect its actual interfaces before claiming that integration is complete.
+
+
+## Optional visual design analysis
+
+Resources may carry a validated `design` field. Older records omit it and remain
+readable with unchanged IDs, storage version and paths. See [DESIGN.md](DESIGN.md)
+for images, evidence-backed domains/features, uncertain style labels, `inspect`
+and revision-guarded `analyze`. Local search also accepts `--domain`, `--feature`
+and `--style`; complete results retain original source and image evidence.
+Providers should preserve the optional field on round trips. No remote provider
+or visual model is selected automatically.

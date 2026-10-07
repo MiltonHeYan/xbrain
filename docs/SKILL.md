@@ -1,3 +1,5 @@
+For image-based design references, use [DESIGN.md](DESIGN.md) first. Text-only distillation below must not invent visual features or style labels.
+
 # Collection and task-use workflow
 
 The installable entrypoint is [../SKILL.md](../SKILL.md). Keep the entire repository; scripts use the compiled TypeScript modules. The product has two separate local stores: the existing bookmark gallery and resource memory. Capturing resources never mutates the gallery.

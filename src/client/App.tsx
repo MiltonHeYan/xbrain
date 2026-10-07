@@ -59,6 +59,7 @@ export function App() {
           <a className="brand" href="/" aria-label="xrecall home">
             xrecall
           </a>
+          <a href="/?view=graph">Reference graph</a>
           <span className="collection-count" id="result-count" aria-live="polite">
             {loading ? '' : `${filtered.length} bookmarks`}
           </span>
