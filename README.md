@@ -4,7 +4,23 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
-## 复制这句话给你的 Agent
+## 用你的 Agent 开始
+
+<table>
+<tr>
+<td><a href="https://cursor.com/link/prompt?text=%E8%AF%B7%E9%98%85%E8%AF%BB%20https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%20%EF%BC%8C%E5%B8%AE%E6%88%91%E5%AE%89%E8%A3%85%20xrecall%EF%BC%8C%E5%B9%B6%E5%BC%95%E5%AF%BC%E6%88%91%E5%90%8C%E6%AD%A5%E8%87%AA%E5%B7%B1%E7%9A%84%20X%20%E6%94%B6%E8%97%8F%E3%80%82" title="Cursor: Open prompt preview"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="24" height="24" alt="Cursor"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/launch-dark.svg"><img src="docs/assets/agents/launch.svg" width="12" height="12" align="top" alt="Open prompt preview"></picture></a></td>
+<td><a href="#copy-prompt" title="Codex: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" width="24" height="24" alt="Codex"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
+<td><a href="#copy-prompt" title="Claude Code: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/claude-code-mono-dark.svg"><img src="docs/assets/agents/claude-code-mono.svg" width="24" height="24" alt="Claude Code"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
+<td><a href="#copy-prompt" title="OpenClaw: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openclaw-mono-dark.svg"><img src="docs/assets/agents/openclaw-mono.svg" width="24" height="24" alt="OpenClaw"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
+<td><a href="#copy-prompt" title="Other agents: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/other-dark.svg"><img src="docs/assets/agents/other.svg" width="24" height="24" alt="Other agents"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
+</tr>
+</table>
+
+Cursor 会预填下方提示词，需你确认后才执行。Codex、Claude Code、OpenClaw 等请用代码块右上角的复制按钮，再粘贴到已有 Agent；这些入口不会自动安装或连接账号。
+
+GitHub 会移除桌面应用协议链接，因此 Codex、Claude、Claude Code、VS Code、OpenClaw 和 Hermes 使用下方复制指令。
+
+<a name="copy-prompt"></a>
 
 ```text
 请阅读 https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md ，帮我安装 xrecall，并引导我同步自己的 X 收藏。
