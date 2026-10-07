@@ -4,7 +4,18 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
-## Copy this to your Agent
+## Start with your Agent
+
+<table>
+<tr>
+<td><a href="https://cursor.com/link/prompt?text=Read%20https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%2C%20help%20me%20install%20xrecall%2C%20and%20guide%20me%20through%20syncing%20my%20X%20bookmarks."><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>Open in Cursor ↗</strong></a></td>
+<td><a href="#copy-prompt"><strong>Other Agents · Copy prompt ↓</strong></a></td>
+</tr>
+</table>
+
+Cursor prefills the prompt below; you review and confirm before execution. For Codex, Claude Code, OpenClaw and other Agents, use the code block’s copy button and paste into your existing Agent. These links do not install software or connect accounts.
+
+<a name="copy-prompt"></a>
 
 ```text
 Read https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md, help me install xrecall, and guide me through syncing my X bookmarks.
