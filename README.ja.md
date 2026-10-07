@@ -1,30 +1,26 @@
 # xrecall
 
-**保存した情報を、実際の作業で使えるリソース記憶に。**
-
-[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
-
-## Agent で始める
-
-<table>
-<tr>
-<td><a href="https://cursor.com/link/prompt?text=https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%20%E3%82%92%E8%AA%AD%E3%81%BF%E3%80%81xrecall%20%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%A8%E8%87%AA%E5%88%86%E3%81%AE%20X%20%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%81%AE%E5%90%8C%E6%9C%9F%E3%82%92%E6%A1%88%E5%86%85%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82" title="Cursor: Open prompt preview"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="24" height="24" alt="Cursor"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/launch-dark.svg"><img src="docs/assets/agents/launch.svg" width="12" height="12" align="top" alt="Open prompt preview"></picture></a></td>
-<td><a href="#copy-prompt" title="Codex: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" width="24" height="24" alt="Codex"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
-<td><a href="#copy-prompt" title="Claude Code: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/claude-code-mono-dark.svg"><img src="docs/assets/agents/claude-code-mono.svg" width="24" height="24" alt="Claude Code"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
-<td><a href="#copy-prompt" title="OpenClaw: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openclaw-mono-dark.svg"><img src="docs/assets/agents/openclaw-mono.svg" width="24" height="24" alt="OpenClaw"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
-<td><a href="#copy-prompt" title="Other agents: Go to copyable prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/other-dark.svg"><img src="docs/assets/agents/other.svg" width="24" height="24" alt="Other agents"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/copy-dark.svg"><img src="docs/assets/agents/copy.svg" width="12" height="12" align="top" alt="Go to copyable prompt"></picture></a></td>
-</tr>
-</table>
-
-Cursor には下の指示が事前入力され、実行前に確認が必要です。Codex、Claude Code、OpenClaw などではコードブロックのコピーボタンを使い、既存の Agent に貼り付けてください。自動インストールやアカウント接続は行いません。
-
-GitHub はデスクトップアプリのプロトコルリンクを削除するため、Codex、Claude、Claude Code、VS Code、OpenClaw、Hermes では下の指示をコピーしてください。
-
-<a name="copy-prompt"></a>
-
 ```text
 https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md を読み、xrecall のインストールと自分の X ブックマークの同期を案内してください。
 ```
+
+[English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
+
+**保存した情報を、実際の作業で使えるリソース記憶に。**
+
+<p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="24" height="24" alt="Cursor"></picture>
+&nbsp;&nbsp;
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" width="24" height="24" alt="Codex"></picture>
+&nbsp;&nbsp;
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/claude-code-mono-dark.svg"><img src="docs/assets/agents/claude-code-mono.svg" width="24" height="24" alt="Claude Code"></picture>
+&nbsp;&nbsp;
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openclaw-mono-dark.svg"><img src="docs/assets/agents/openclaw-mono.svg" width="24" height="24" alt="OpenClaw"></picture>
+</p>
+
+<picture>
+  <img src="docs/assets/hero/xrecall-hero-v2.png" width="1200" alt="xrecall の流れ：X ブックマークを保存し、ローカルのリソース記憶に整理して、作業時に Agent が関連資料を検索し出典を引用します。">
+</picture>
 
 リポジトリにアクセスしてローカルコマンドを実行できる Agent、Git、Node.js 22.12+ が必要です。同期前に利用可能なデータソースを選び、個人アカウントを認可してください。既定ではローカル保存のみで、外部 memory には自動接続しません。
 
