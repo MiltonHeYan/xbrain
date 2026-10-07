@@ -1,9 +1,9 @@
 :root {
-  --ink: #171717;
-  --muted: #626262;
-  --line: #e5e5e5;
-  --control-line: #858585;
-  --green: #171717;
+  --ink: #000;
+  --muted: #000;
+  --line: #000;
+  --control-line: #000;
+  --green: #000;
   --bg: #fff;
   --sidebar: #fff;
   --card: #fff;
@@ -44,7 +44,7 @@ a {
 button:focus-visible,
 a:focus-visible,
 input:focus-visible {
-  outline: 2px solid #171717;
+  outline: 2px solid #000;
   outline-offset: 4px;
 }
 .sr-only {
@@ -142,10 +142,9 @@ input:focus-visible {
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--card);
-  transition: border-color 0.15s;
 }
 .card:hover {
-  border-color: #999;
+  outline: 1px solid #000;
 }
 .card-open {
   display: block;
@@ -227,10 +226,10 @@ dialog {
   color: var(--ink);
   max-height: calc(100dvh - 48px);
   overflow: auto;
-  box-shadow: 0 24px 80px #0002;
+  box-shadow: none;
 }
 dialog::backdrop {
-  background: #0005;
+  background: #000;
 }
 body:has(dialog[open]) {
   overflow: hidden;
@@ -246,7 +245,8 @@ body:has(dialog[open]) {
   border-radius: 4px;
 }
 .close:hover {
-  background: #f3f3f3;
+  background: #000;
+  color: #fff;
 }
 .detail-heading {
   display: flex;
@@ -309,7 +309,7 @@ body:has(dialog[open]) {
   gap: 8px;
 }
 .media-settings input {
-  accent-color: #171717;
+  accent-color: #000;
 }
 .media-settings small {
   display: block;
@@ -331,7 +331,7 @@ body:has(dialog[open]) {
   text-align: center;
   font-size: 12px;
   color: var(--muted);
-  background: #f4f4f4;
+  background: #fff;
 }
 @media (max-width: 1000px) {
   .gallery {

@@ -12,3 +12,5 @@ intentionally avoid creating links to potentially real X posts.
 
 Run examples against a separate scratch store when you do not want to mix them
 with your own collection. See the main README for `--store` and `BOOKMARK_STORE`.
+
+`synthetic-resource.json` is a fictional resource-memory example, separate from the gallery format. Use an isolated `--store` path; never represent it as a real recommendation.

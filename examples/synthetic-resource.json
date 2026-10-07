@@ -1,0 +1,11 @@
+{
+  "source": {"provider": "web", "id": "fictional-dialog-guide", "url": "https://example.com/dialog-guide"},
+  "title": "Fictional accessible dialog guide",
+  "text": "A fictional reference about keyboard focus and dialog accessibility.",
+  "summary": "A sample checklist, not a real product recommendation.",
+  "purpose": "Review keyboard behavior in React dialogs",
+  "useWhen": ["React dialog accessibility review"],
+  "limitations": ["Fictional test resource; not independently verified"],
+  "savedReason": null,
+  "updatedAt": "2026-10-07T00:00:00.000Z"
+}
