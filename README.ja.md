@@ -1,10 +1,18 @@
 # xrecall
 
-旧名は xstash です。既存の checkout と Skill インストール先は変更不要です。origin を `https://github.com/MiltonHeYan/xrecall.git` に更新してください。CLI コマンド、データパス、ブラウザーの保存キー、`xstash.*.v1` プロトコル識別子は維持され、データ移行は不要です。
-
 **保存した情報を、実際の作業で使えるリソース記憶に。**
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
+
+## この一文を Agent にコピー
+
+```text
+https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md を読み、xrecall のインストールと自分の X ブックマークの同期を案内してください。
+```
+
+リポジトリにアクセスしてローカルコマンドを実行できる Agent、Git、Node.js 22.12+ が必要です。同期前に利用可能なデータソースを選び、個人アカウントを認可してください。既定ではローカル保存のみで、外部 memory には自動接続しません。
+
+旧名は xstash です。既存の checkout と Skill インストール先は変更不要です。origin を `https://github.com/MiltonHeYan/xrecall.git` に更新してください。CLI コマンド、データパス、ブラウザーの保存キー、`xstash.*.v1` プロトコル識別子は維持され、データ移行は不要です。
 
 [Milton / HeYan](https://github.com/MiltonHeYan) による MIT ライセンスの独立した Agent Skill です。許可された X ブックマークなどを収集し、用途・適用場面・制約を整理してローカルに保存します。希望する場合だけ、ユーザーが選んだ個人用 memory に同期できます。作業時には関連候補を検索し、役立つ情報だけを使って元の出典を引用します。ギャラリーは白黒の最小限の管理画面です。
 

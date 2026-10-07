@@ -1,10 +1,18 @@
 # xrecall
 
-Previously xstash. Existing checkouts and Skill installation folders can stay in place: update origin to `https://github.com/MiltonHeYan/xrecall.git`. CLI commands, data paths, browser storage keys and `xstash.*.v1` protocol identifiers remain compatible; no data migration is needed.
-
 **Turn saved resources into memory your Agent can use while doing real work.**
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
+
+## Copy this to your Agent
+
+```text
+Read https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md, help me install xrecall, and guide me through syncing my X bookmarks.
+```
+
+Requires an Agent with repository access and local command execution, Git and Node.js 22.12+. Before syncing, select an available source and authorize your personal account. Data stays local by default; no remote memory is connected automatically.
+
+Previously xstash. Existing checkouts and Skill installation folders can stay in place: update origin to `https://github.com/MiltonHeYan/xrecall.git`. CLI commands, data paths, browser storage keys and `xstash.*.v1` protocol identifiers remain compatible; no data migration is needed.
 
 An independent MIT-licensed Agent Skill by [Milton / HeYan](https://github.com/MiltonHeYan). Collect authorized X bookmarks or other sources, distill purpose, useful situations and limitations, save locally, and optionally sync selected resources to your chosen personal memory. At task time, retrieve candidates and use/cite only relevant original sources. The gallery remains a minimal black-and-white local management view.
 
