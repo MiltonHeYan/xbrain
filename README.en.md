@@ -1,4 +1,6 @@
-# xstash
+# xrecall
+
+Previously xstash. Existing checkouts and Skill installation folders can stay in place: update origin to `https://github.com/MiltonHeYan/xrecall.git`. CLI commands, data paths, browser storage keys and `xstash.*.v1` protocol identifiers remain compatible; no data migration is needed.
 
 **Turn saved resources into memory your Agent can use while doing real work.**
 
@@ -11,14 +13,14 @@ An independent MIT-licensed Agent Skill by [Milton / HeYan](https://github.com/M
 Requires Git, Node 22.12+ and an Agent able to execute local commands. Keep the whole repository, not only SKILL.md:
 
 ```sh
-git clone https://github.com/MiltonHeYan/xstash.git
-cd xstash
+git clone https://github.com/MiltonHeYan/xrecall.git
+cd xrecall
 npm ci
 npm run build
 node scripts/memory.mjs status
 ```
 
-Give your Agent the absolute path to [SKILL.md](SKILL.md), or install the whole clean repository in your client's skill directory (e.g. `~/.agents/skills/xstash/` for Codex). Do not overwrite an existing installation or copy private data. For the optional gallery, `npm start` builds and serves **http://127.0.0.1:4317** on loopback only; `PORT=4319 npm start` selects another port. No global install, bundled model, built-in X login or credentials are needed for local use.
+Give your Agent the absolute path to [SKILL.md](SKILL.md), or install the whole clean repository in your client's skill directory (e.g. `~/.agents/skills/xrecall/` for Codex). Do not overwrite an existing installation or copy private data. For the optional gallery, `npm start` builds and serves **http://127.0.0.1:4317** on loopback only; `PORT=4319 npm start` selects another port. No global install, bundled model, built-in X login or credentials are needed for local use.
 
 ## Manually sync new bookmarks
 

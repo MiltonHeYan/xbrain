@@ -146,11 +146,11 @@ const server = http.createServer(async (req, res) => {
 server.requestTimeout = 30_000;
 server.headersTimeout = 15_000;
 server.on('error', (error) => {
-  console.error(`Could not start xstash: ${errorCode(error) || errorMessage(error)}`);
+  console.error(`Could not start xrecall: ${errorCode(error) || errorMessage(error)}`);
   process.exitCode = 1;
 });
 server.listen(configuredPort, '127.0.0.1', () =>
   console.log(
-    `xstash ready at http://127.0.0.1:${(server.address() as AddressInfo).port}\nLocal datastore: ${store}`,
+    `xrecall ready at http://127.0.0.1:${(server.address() as AddressInfo).port}\nLocal datastore: ${store}`,
   ),
 );

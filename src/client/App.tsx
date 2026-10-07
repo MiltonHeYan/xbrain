@@ -56,8 +56,8 @@ export function App() {
       </a>
       <div className="collection">
         <header className="topbar">
-          <a className="brand" href="/" aria-label="xstash home">
-            xstash
+          <a className="brand" href="/" aria-label="xrecall home">
+            xrecall
           </a>
           <span className="collection-count" id="result-count" aria-live="polite">
             {loading ? '' : `${filtered.length} bookmarks`}
@@ -100,7 +100,7 @@ export function App() {
                 <p>
                   {items.length
                     ? 'Try another search.'
-                    : 'Ask your agent to sync your X bookmarks with the xstash Skill. They’ll appear here.'}
+                    : 'Ask your agent to sync your X bookmarks with the xrecall Skill. They’ll appear here.'}
                 </p>
               </div>
             )}

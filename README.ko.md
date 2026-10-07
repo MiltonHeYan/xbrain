@@ -1,4 +1,6 @@
-# xstash
+# xrecall
+
+이전 이름은 xstash입니다. 기존 checkout과 Skill 설치 폴더는 그대로 사용할 수 있습니다. origin만 `https://github.com/MiltonHeYan/xrecall.git`로 바꾸세요. CLI 명령, 데이터 경로, 브라우저 저장 키와 `xstash.*.v1` 프로토콜 식별자는 유지되며 데이터 이전은 필요하지 않습니다.
 
 **저장한 자료를 실제 작업에 활용하는 리소스 기억으로.**
 
@@ -11,8 +13,8 @@
 Git, Node.js 22.12+, 로컬 명령을 실행할 수 있는 Agent가 필요합니다. SKILL.md만 복사하지 말고 저장소 전체를 유지하세요.
 
 ```sh
-git clone https://github.com/MiltonHeYan/xstash.git
-cd xstash
+git clone https://github.com/MiltonHeYan/xrecall.git
+cd xrecall
 npm ci
 npm run build
 node scripts/memory.mjs status

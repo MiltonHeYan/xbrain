@@ -40,9 +40,9 @@ function expectNoManualWorkflow() {
 }
 
 describe('Minimal gallery surface', () => {
-  it('has xstash branding, a single search input, and a result count', async () => {
+  it('has xrecall branding, a single search input, and a result count', async () => {
     await openGallery();
-    expect(screen.getByText(/^xstash$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^xrecall$/i)).toBeInTheDocument();
     expect(document.querySelectorAll('input')).toHaveLength(1);
     expect(document.querySelector('#search')).toHaveAccessibleName(/search/i);
     expect(document.querySelector('#result-count')).toHaveTextContent(/1/);

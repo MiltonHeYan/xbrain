@@ -1,10 +1,12 @@
-# xstash
+# xrecall
+
+原名 xstash。已有 checkout 无需改目录或搬迁数据；只需将 origin 更新为 `https://github.com/MiltonHeYan/xrecall.git`。现有 CLI 命令、数据路径、浏览器存储键和 `xstash.*.v1` 协议标识保持兼容；已有 Skill 安装目录也可继续使用。
 
 **把收藏变成做事时用得上的资源记忆。**
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
-xstash 是 [Milton / HeYan](https://github.com/MiltonHeYan) 发起的 MIT 开源独立 Agent Skill。它帮助你的 Agent 采集授权范围内的 X 收藏等资源，提炼用途、适用情境与限制，保存到本地资源记忆；也可显式同步到你选择的个人 memory。做实际任务时，Agent 检索相关资源、判断是否适用，再使用并引用原始来源。
+xrecall 是 [Milton / HeYan](https://github.com/MiltonHeYan) 发起的 MIT 开源独立 Agent Skill。它帮助你的 Agent 采集授权范围内的 X 收藏等资源，提炼用途、适用情境与限制，保存到本地资源记忆；也可显式同步到你选择的个人 memory。做实际任务时，Agent 检索相关资源、判断是否适用，再使用并引用原始来源。
 
 **你的 Agent + 你选择的数据源 + 你选择的个人 memory。没有默认远端后端。** 不选择 memory 服务也能本地保存、搜索、更新和删除；未同步状态会明确返回。图库保留极简黑白的搜索框、卡片墙和只读详情，作为本地管理视图。
 
@@ -13,14 +15,14 @@ xstash 是 [Milton / HeYan](https://github.com/MiltonHeYan) 发起的 MIT 开源
 需要 Git、Node.js 22.12+ 和能运行本地命令的 Agent。克隆完整仓库，不能只复制 `SKILL.md`：
 
 ```sh
-git clone https://github.com/MiltonHeYan/xstash.git
-cd xstash
+git clone https://github.com/MiltonHeYan/xrecall.git
+cd xrecall
 npm ci
 npm run build
 node scripts/memory.mjs status
 ```
 
-把根目录 [`SKILL.md`](SKILL.md) 的绝对路径交给 Agent。也可按客户端规则把整个干净仓库安装到 Skill 目录（如 Codex 的 `~/.agents/skills/xstash/`）；不要覆盖已有安装或复制私人 `data/`。Agent、终端与文件必须处于可互相访问的环境。此代码未发布为 npm 包。
+把根目录 [`SKILL.md`](SKILL.md) 的绝对路径交给 Agent。也可按客户端规则把整个干净仓库安装到 Skill 目录（如 Codex 的 `~/.agents/skills/xrecall/`）；不要覆盖已有安装或复制私人 `data/`。Agent、终端与文件必须处于可互相访问的环境。此代码未发布为 npm 包。
 
 查看图库：
 
@@ -64,7 +66,7 @@ node scripts/memory.mjs status
 
 交给 Agent 的示例：
 
-> 使用 /绝对路径/xstash/SKILL.md，整理我明确选择的资源。先保存本地，基于实际来源提炼用途、适用情境和限制，未知收藏原因不要猜。没有选定个人 memory 服务之前不要远端同步。完成任务时先检索可能相关的资源，适用才使用并引用来源，没有匹配就继续任务。
+> 使用 /绝对路径/xrecall/SKILL.md，整理我明确选择的资源。先保存本地，基于实际来源提炼用途、适用情境和限制，未知收藏原因不要猜。没有选定个人 memory 服务之前不要远端同步。完成任务时先检索可能相关的资源，适用才使用并引用来源，没有匹配就继续任务。
 
 ## 选择 memory，而不是被绑定
 
@@ -83,7 +85,7 @@ node scripts/memory.mjs status --provider-config /private/provider.json
 
 ## 数据源可选推荐
 
-可以使用你已授权的数据源工具、官方 API 或本地导出文件。**CoreSpeed 是可选推荐的数据源工具入口，不是 xstash 的默认 memory 后端，也不是必需依赖。** 如你选择它，可按 [官方说明](https://corespeed.io/SKILL.md) 在当前 Agent 配置并连接个人 X 账号；现有连接可复用。每次按实际 schema 与授权范围读取，不猜测分页参数，不把部分快照称作完整历史。
+可以使用你已授权的数据源工具、官方 API 或本地导出文件。**CoreSpeed 是可选推荐的数据源工具入口，不是 xrecall 的默认 memory 后端，也不是必需依赖。** 如你选择它，可按 [官方说明](https://corespeed.io/SKILL.md) 在当前 Agent 配置并连接个人 X 账号；现有连接可复用。每次按实际 schema 与授权范围读取，不猜测分页参数，不把部分快照称作完整历史。
 
 官方 X API 路径需由你的客户端处理用户 OAuth、权限和计费；项目不保存 X/API 凭据，不代替客户端登录。采集与 memory 服务可以分别选择，与图库独立。
 

@@ -1,4 +1,6 @@
-# xstash
+# xrecall
+
+旧名は xstash です。既存の checkout と Skill インストール先は変更不要です。origin を `https://github.com/MiltonHeYan/xrecall.git` に更新してください。CLI コマンド、データパス、ブラウザーの保存キー、`xstash.*.v1` プロトコル識別子は維持され、データ移行は不要です。
 
 **保存した情報を、実際の作業で使えるリソース記憶に。**
 
@@ -11,8 +13,8 @@
 Git、Node.js 22.12+、ローカルコマンドを実行できる Agent が必要です。SKILL.md だけでなくリポジトリ全体を保持してください。
 
 ```sh
-git clone https://github.com/MiltonHeYan/xstash.git
-cd xstash
+git clone https://github.com/MiltonHeYan/xrecall.git
+cd xrecall
 npm ci
 npm run build
 node scripts/memory.mjs status
