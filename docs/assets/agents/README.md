@@ -20,6 +20,6 @@ are selected with `picture` elements. All six SVGs were parsed and rendered for
 visual review; the four marks were checked individually.
 
 Product names and marks belong to their respective owners. Their use does not
-imply partnership, certification, or endorsement. The xstash MIT license does
+imply partnership, certification, or endorsement. The xrecall MIT license does
 **not** relicense these third-party marks. CoreSpeed's collection is the asset
 source, not a claim that the product owners endorse this project.

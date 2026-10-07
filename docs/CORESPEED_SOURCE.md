@@ -23,7 +23,7 @@ Choose the account explicitly in source config:
   "kind":"command", "scope":"personal", "provider":"x",
   "account":"@yourHandle", "pagination":"single", "incremental":"rescan",
   "timeoutMs":60000,
-  "command":["/absolute/path/to/node", "/absolute/xstash/scripts/corespeed-source.mjs",
+  "command":["/absolute/path/to/node", "/absolute/xrecall/scripts/corespeed-source.mjs",
     "--cli", "/absolute/path/to/cs", "--max-results", "12"]
 }
 ```
@@ -79,7 +79,7 @@ block. Its authority is the user's selected, successfully authorized MCP call.
 {
   "kind":"command", "scope":"personal", "provider":"x",
   "account":"@yourHandle", "pagination":"single", "incremental":"rescan",
-  "command":["/absolute/path/to/node", "/absolute/xstash/scripts/corespeed-source.mjs",
+  "command":["/absolute/path/to/node", "/absolute/xrecall/scripts/corespeed-source.mjs",
     "--snapshot", "/private/source-snapshot.json", "--max-results", "12"]
 }
 ```

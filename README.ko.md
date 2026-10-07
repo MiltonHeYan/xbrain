@@ -1,8 +1,18 @@
-# xstash
+# xrecall
 
 **저장한 자료를 실제 작업에 활용하는 리소스 기억으로.**
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
+
+## 이 문장을 Agent에게 복사하세요
+
+```text
+https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md 를 읽고 xrecall 설치와 내 X 북마크 동기화를 안내해 주세요.
+```
+
+저장소 접근과 로컬 명령 실행이 가능한 Agent, Git, Node.js 22.12+가 필요합니다. 동기화 전에 사용 가능한 데이터 소스를 선택하고 개인 계정을 승인해야 합니다. 기본값은 로컬 저장이며 원격 memory에 자동 연결하지 않습니다.
+
+이전 이름은 xstash입니다. 기존 checkout과 Skill 설치 폴더는 그대로 사용할 수 있습니다. origin만 `https://github.com/MiltonHeYan/xrecall.git`로 바꾸세요. CLI 명령, 데이터 경로, 브라우저 저장 키와 `xstash.*.v1` 프로토콜 식별자는 유지되며 데이터 이전은 필요하지 않습니다.
 
 [Milton / HeYan](https://github.com/MiltonHeYan)이 만든 MIT 라이선스의 독립 Agent Skill입니다. 승인된 X 북마크 등의 자료에서 용도, 적용 상황, 한계를 정리하여 로컬에 저장합니다. 원할 때만 사용자가 선택한 개인 memory에 동기화합니다. 실제 작업 중 관련 후보를 검색하고, 도움이 될 때만 사용하며 원문 출처를 인용합니다. 갤러리는 단순한 흑백 관리 화면으로 유지합니다.
 
@@ -11,8 +21,8 @@
 Git, Node.js 22.12+, 로컬 명령을 실행할 수 있는 Agent가 필요합니다. SKILL.md만 복사하지 말고 저장소 전체를 유지하세요.
 
 ```sh
-git clone https://github.com/MiltonHeYan/xstash.git
-cd xstash
+git clone https://github.com/MiltonHeYan/xrecall.git
+cd xrecall
 npm ci
 npm run build
 node scripts/memory.mjs status

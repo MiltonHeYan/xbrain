@@ -1,11 +1,11 @@
 ---
-name: xstash
+name: xrecall
 description: Sync new bookmarks and collect and distill user-authorized saved resources into local resource memory, optionally sync selected resources to the user's chosen personal memory, and retrieve relevant sources while planning or doing a task. Use for X bookmarks and other saved resources; the gallery is an optional local management view.
 ---
 
-# xstash resource memory
+# xrecall resource memory
 
-Resolve paths relative to this entire skill folder. Requires Node 22.12+. Run `npm ci` once and `npm run build` before CLI use; `npm start` builds and serves the optional black-and-white gallery on loopback. The caller's Agent supplies reasoning and authorized source tools; xstash has no bundled model, source credentials, or default remote memory service.
+Resolve paths relative to this entire skill folder. Requires Node 22.12+. Run `npm ci` once and `npm run build` before CLI use; `npm start` builds and serves the optional black-and-white gallery on loopback. The caller's Agent supplies reasoning and authorized source tools; xrecall has no bundled model, source credentials, or default remote memory service.
 
 Read [docs/SKILL.md](docs/SKILL.md) for collection and task-use workflows, and [docs/MEMORY.md](docs/MEMORY.md) for resource fields, CLI and provider contract. Existing gallery import details remain in [docs/IMPORT_FORMAT.md](docs/IMPORT_FORMAT.md).
 

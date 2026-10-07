@@ -1,6 +1,6 @@
 # Privacy and security / 隐私与安全
 
-xstash 把数据边界尽量做小，但“本地优先”不等于加密、隔离或绝对隐私。导入真实收藏前，请了解下面的区别。
+xrecall 把数据边界尽量做小，但“本地优先”不等于加密、隔离或绝对隐私。导入真实收藏前，请了解下面的区别。
 
 ## Where data goes
 
@@ -44,7 +44,7 @@ that origin may be able to read the data.
 
 ### Agent and CoreSpeed
 
-xstash does not connect directly to CoreSpeed, X, or a model provider.
+xrecall does not connect directly to CoreSpeed, X, or a model provider.
 Your agent's configured connector reads the authorized account and, if asked,
 your selected model processes the bookmark text. Those services have their own
 permissions, retention policies, billing and terms. Authorizing the gallery

@@ -16,7 +16,7 @@ import {
   status,
 } from './service.js';
 
-const HELP = `xstash resource memory — local by default; no implicit remote provider
+const HELP = `xrecall resource memory — local by default; no implicit remote provider
 
 node scripts/memory.mjs pull --source-config FILE [--max-pages 10] [--restart] [--store FILE]
 node scripts/memory.mjs pending [--limit 20] [--store FILE]

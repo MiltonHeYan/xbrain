@@ -1,6 +1,6 @@
 # Resource memory: CLI and adapter contract
 
-xstash is a standalone Skill and local resource store. Source access, Agent reasoning and memory destination are separate. No remote provider is selected implicitly. The existing gallery stays a small black-and-white management view; these memory operations are Agent/CLI operations, not new UI tabs.
+xrecall is a standalone Skill and local resource store. Source access, Agent reasoning and memory destination are separate. No remote provider is selected implicitly. The existing gallery stays a small black-and-white management view; these memory operations are Agent/CLI operations, not new UI tabs.
 
 For fetching new source bookmarks, incremental/page recovery and Agent distillation, see [SYNC_BOOKMARKS.md](SYNC_BOOKMARKS.md). Source pull and optional memory-provider sync are distinct operations.
 
@@ -11,8 +11,8 @@ npm ci
 npm run build
 node scripts/memory.mjs --help
 node scripts/memory.mjs status
-node scripts/memory.mjs put examples/synthetic-resource.json --store /tmp/xstash-example/resources.json
-node scripts/memory.mjs search "React dialog accessibility" --store /tmp/xstash-example/resources.json
+node scripts/memory.mjs put examples/synthetic-resource.json --store /tmp/xrecall-example/resources.json
+node scripts/memory.mjs search "React dialog accessibility" --store /tmp/xrecall-example/resources.json
 ```
 
 The example is explicitly fictional and uses a separate store. Do not import it into a private library as real evidence. `npm start` still runs the optional gallery; its `BOOKMARK_STORE` does not change resource memory's location. The memory CLI's `--store` selects a separate resource file; default is `<repo>/data/resource-memory.json`, independent of shell cwd. It is gitignored and never bundled. No command automatically selects the existing 4317/4319 data or fetches new X bookmarks.
@@ -124,7 +124,7 @@ Search request/response:
 {"protocol":"xstash.memory.v1","ok":true,"resources":[]}
 ```
 
-Return complete valid resources, at most 50, with no duplicates. xstash hides local tombstones, prefers local records when IDs overlap, then lexically reranks the candidates. Cross-language semantic-only results may be filtered out. Adapter errors, mismatched acknowledgements, invalid JSON, >1 MiB output, or a 15-second timeout do not confirm sync. stderr is consumed but not displayed to prevent accidental credential disclosure; inspect adapter logs privately when needed. The process runs without a shell; trust and review its executable/config before invoking it.
+Return complete valid resources, at most 50, with no duplicates. xrecall hides local tombstones, prefers local records when IDs overlap, then lexically reranks the candidates. Cross-language semantic-only results may be filtered out. Adapter errors, mismatched acknowledgements, invalid JSON, >1 MiB output, or a 15-second timeout do not confirm sync. stderr is consumed but not displayed to prevent accidental credential disclosure; inspect adapter logs privately when needed. The process runs without a shell; trust and review its executable/config before invoking it.
 
 ## Verification boundary
 

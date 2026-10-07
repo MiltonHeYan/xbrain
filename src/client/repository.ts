@@ -134,7 +134,7 @@ export function exportLibrary(bookmarks: Bookmark[], demo: boolean): void {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = demo ? 'xstash-synthetic-demo.json' : 'xstash-bookmarks.json';
+  anchor.download = demo ? 'xrecall-synthetic-demo.json' : 'xrecall-bookmarks.json';
   anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
