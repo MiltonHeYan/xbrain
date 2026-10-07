@@ -377,3 +377,7 @@ body:has(dialog[open]) {
     transition: none !important;
   }
 }
+
+.brand .brand-mark {
+  margin-right: 6px;
+}

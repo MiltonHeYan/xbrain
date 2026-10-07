@@ -40,9 +40,9 @@ function expectNoManualWorkflow() {
 }
 
 describe('Minimal gallery surface', () => {
-  it('has xrecall branding, a single search input, and a result count', async () => {
+  it('has Xbrain branding, a single search input, and a result count', async () => {
     await openGallery();
-    expect(screen.getByText(/^xrecall$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Xbrain$/i)).toBeInTheDocument();
     expect(document.querySelectorAll('input')).toHaveLength(1);
     expect(document.querySelector('#search')).toHaveAccessibleName(/search/i);
     expect(document.querySelector('#result-count')).toHaveTextContent(/1/);

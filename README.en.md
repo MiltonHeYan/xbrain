@@ -1,12 +1,10 @@
-# xrecall
+```text
+Read https://github.com/MiltonHeYan/xbrain/blob/main/SKILL.md, help me install Xbrain, and organize my authorized design references for retrieval.
+```
+
+# Xbrain
 
 **Turn scattered design references into context your Agent can find and explain.**
-
-Give your Agent this one line:
-
-```text
-Read https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md, help me install xrecall, and organize my authorized design references for retrieval.
-```
 
 <p><img src="docs/assets/agents/cursor.svg" width="24" alt="Cursor"> <img src="docs/assets/agents/openai.svg" width="24" alt="Codex"> <img src="docs/assets/agents/claude-code-mono.svg" width="24" alt="Claude Code"> <img src="docs/assets/agents/openclaw-mono.svg" width="24" alt="OpenClaw"></p>
 
@@ -18,9 +16,11 @@ Your Agent looks at your saved UI or interior images, records visible features a
 
 A saved image is not a preference. Style labels remain hypotheses until you confirm them. Images the Agent cannot view stay unanalyzed.
 
+![Xbrain graph with hardware references and source evidence](docs/assets/xbrain-graph.png)
+
 ## What you need
 
-Git, Node.js 22.12+, and an Agent with local commands and image understanding. Your existing connector supplies authorized bookmarks; xrecall organizes and retrieves them. Memory works locally; you choose any external backend. [CoreSpeed](https://corespeed.io) is an optional connector choice.
+Git, Node.js 22.12+, and an Agent with local commands and image understanding. Your existing connector supplies authorized bookmarks; Xbrain organizes and retrieves them. Memory works locally; you choose any external backend. [CoreSpeed](https://corespeed.io) is an optional connector choice.
 
 [Install & use](SKILL.md) · [Design workflow & graph](docs/DESIGN.md) · [X input](docs/SYNC_BOOKMARKS.md) · [Memory](docs/MEMORY.md) · [Contribute](CONTRIBUTING.md)
 

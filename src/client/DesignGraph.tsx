@@ -1,14 +1,15 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {DOMAINS} from '../shared/design.js';
-import type {DesignGraph as GraphData} from '../shared/design-graph.js';
+import type {DesignGraph as GraphData, GraphNode} from '../shared/design-graph.js';
+import {NetworkCanvas, COLORS} from './graph/NetworkCanvas.js';
+import type {NetworkControls} from './graph/NetworkCanvas.js';
 import './design-graph.css';
+import {BrandMark} from './BrandMark.js';
 
 function OriginalImage({url, title}: {url: string; title: string}) {
   const [failed, setFailed] = useState(false);
   return failed ? (
-    <p>
-      Image unavailable. Open the original source to check access; this preview cannot recover it.
-    </p>
+    <p>Image unavailable. Open the original source to check access.</p>
   ) : (
     <img
       src={url}
@@ -19,245 +20,261 @@ function OriginalImage({url, title}: {url: string; title: string}) {
     />
   );
 }
-
-export function DesignGraph() {
-  const [data, setData] = useState<GraphData | null>(null);
-  const [error, setError] = useState('');
-  const [query, setQuery] = useState('');
-  const [domain, setDomain] = useState('');
-  const [kind, setKind] = useState('all');
-  const [selected, setSelected] = useState('');
-  const [zoom, setZoom] = useState(1);
-  const [images, setImages] = useState(false);
-  const [request, setRequest] = useState('');
+const NAMES: Record<GraphNode['type'], string> = {
+  resource: 'References',
+  domain: 'Domains',
+  feature: 'Visual features',
+  style: 'Style hypotheses',
+};
+export function DesignGraph({
+  embedded = false,
+  onCount,
+  providedData,
+  focusId,
+}: {
+  embedded?: boolean;
+  onCount?: (count: number) => void;
+  providedData?: GraphData;
+  focusId?: string;
+} = {}) {
+  const [data, setData] = useState<GraphData | null>(providedData ?? null),
+    [error, setError] = useState('');
+  const [query, setQuery] = useState(''),
+    [domain, setDomain] = useState(''),
+    [kind, setKind] = useState('');
+  const [selected, setSelected] = useState(''),
+    [images, setImages] = useState(false),
+    [browse, setBrowse] = useState(false);
+  const controls = useRef<NetworkControls | null>(null),
+    stage = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const controller = new AbortController();
-    setError('');
-    setData(null);
-    setSelected('');
-    setImages(false);
-    fetch(`/api/design?${request}`, {signal: controller.signal})
-      .then(async (response) => {
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Could not read design memory.');
-        setData(result as GraphData);
+    if (providedData) {
+      setData(providedData);
+      return;
+    }
+    const abort = new AbortController();
+    fetch('/api/design', {signal: abort.signal})
+      .then(async (r) => {
+        const d = await r.json();
+        if (!r.ok) throw Error(d.error || 'Could not load design memory.');
+        setData(d);
       })
       .catch((e) => {
-        if (!controller.signal.aborted)
-          setError(e instanceof Error ? e.message : 'Could not read design memory.');
+        if (!abort.signal.aborted)
+          setError(e instanceof Error ? e.message : 'Could not load design memory.');
       });
-    return () => controller.abort();
-  }, [request]);
-  const nodes = useMemo(
-    () =>
-      data?.nodes.filter((n) => kind === 'all' || n.type === 'resource' || n.type === kind) ?? [],
-    [data, kind],
-  );
-  const positions = useMemo(() => {
-    const counts = [0, 0, 0];
-    return new Map(
-      nodes.map((n) => {
-        const column = n.type === 'resource' ? 0 : n.type === 'style' ? 2 : 1;
-        return [n.id, {x: 25 + column * 290, y: 45 + counts[column]!++ * 66}];
-      }),
-    );
-  }, [nodes]);
-  const edges = data?.edges.filter((e) => positions.has(e.source) && positions.has(e.target)) ?? [];
-  const related = data?.edges.filter((e) => e.source === selected || e.target === selected) ?? [];
-  const resourceIds = new Set([selected, ...related.map((e) => e.resourceId)]);
-  const resources = data?.resources.filter((r) => resourceIds.has(r.id)) ?? [];
-  const height = Math.max(420, ...[...positions.values()].map((p) => p.y + 70));
-  const choose = (id: string) => {
+    return () => abort.abort();
+  }, [providedData]);
+  useEffect(() => {
+    if (data) onCount?.(data.total);
+  }, [data, onCount]);
+  const choose = useCallback((id: string) => {
     setSelected(id);
     setImages(false);
+    setBrowse(false);
+  }, []);
+  useEffect(() => {
+    if (focusId) {
+      setQuery('');
+      setDomain('');
+      setKind('');
+      choose(focusId);
+    }
+  }, [focusId, choose]);
+  const matches = useMemo(() => {
+    if (!data) return new Set<string>();
+    const q = query.trim().toLowerCase();
+    const resources = new Map(data.resources.map((r) => [r.id, r]));
+    const eligible = new Set<string>();
+    for (const r of data.resources)
+      if (
+        !domain ||
+        (r.design?.status === 'analyzed' && r.design.domains.some((d) => d.label === domain))
+      ) {
+        eligible.add(r.id);
+        for (const e of data.edges) if (e.resourceId === r.id) eligible.add(e.target);
+      }
+    return new Set(
+      data.nodes
+        .filter((n) => {
+          const r = resources.get(n.id);
+          const text = r
+            ? [n.label, r.text, r.summary, ...(r.design?.features.map((f) => f.value) ?? [])].join(
+                ' ',
+              )
+            : n.label;
+          return (
+            eligible.has(n.id) &&
+            (!kind || n.type === kind) &&
+            (!q || text.toLowerCase().includes(q))
+          );
+        })
+        .map((n) => n.id),
+    );
+  }, [data, query, domain, kind]);
+  const filtered = Boolean(query.trim() || domain || kind);
+  const related = data?.edges.filter((e) => e.source === selected || e.target === selected) ?? [];
+  const ids = new Set([selected, ...related.map((e) => e.resourceId)]);
+  const resources = data?.resources.filter((r) => ids.has(r.id)) ?? [];
+  const selectedNode = data?.nodes.find((n) => n.id === selected);
+  const fullscreen = async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await stage.current?.requestFullscreen();
+    } catch {
+      setError('Fullscreen is unavailable in this browser. The graph still works below.');
+    }
   };
   return (
     <main className="design-page">
-      <header className="design-header">
-        <a href="/">xrecall</a>
-        <a href="/">Collection</a>
-      </header>
-      <p className="design-eyebrow">YOUR REFERENCES, CONNECTED</p>
-      <h1>Find the thread.</h1>
-      <p>
-        Explore the visual details behind your saved references. A shared style is a hypothesis, not
-        your preference.
-      </p>
-      <form
-        className="design-controls"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setRequest(new URLSearchParams({q: query, domain}).toString());
-        }}
-      >
-        <label>
-          Task or feature
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Generous spacing, warm wood…"
-          />
-        </label>
-        <label>
-          Design domain
-          <select value={domain} onChange={(e) => setDomain(e.target.value)}>
-            <option value="">All domains</option>
-            {DOMAINS.map((d) => (
-              <option key={d}>{d}</option>
-            ))}
-          </select>
-        </label>
-        <button type="submit">Search</button>
-      </form>
-      {error ? (
-        <p role="alert">{error}</p>
-      ) : !data ? (
+      {!embedded && (
+        <>
+          <header className="design-header">
+            <a className="design-brand" href="/" aria-label="Xbrain home">
+              <BrandMark />
+              <span>Xbrain</span>
+            </a>
+            <div className="design-header-right">
+              <span className="local-indicator">Local collection</span>
+              <a href="/">View collection ↗</a>
+            </div>
+          </header>
+          <div className="design-intro">
+            <div>
+              <p className="design-eyebrow">A PLACE FOR YOUR IDEAS</p>
+              <h1>A clearer picture.</h1>
+            </div>
+            <p>
+              Your references, connected.
+              <br />
+              Follow a detail. Find your next direction.
+            </p>
+          </div>
+        </>
+      )}
+      {error && <p role="alert">{error}</p>}
+      {!data ? (
         <p role="status">Loading design memory…</p>
       ) : (
         <>
-          <div className="design-toolbar">
-            <label>
-              Connections
-              <select
-                aria-label="Connection type"
-                value={kind}
-                onChange={(e) => {
-                  setKind(e.target.value);
-                  setSelected('');
-                }}
-              >
-                <option value="all">All</option>
-                <option value="domain">Domains</option>
-                <option value="feature">Features</option>
-                <option value="style">Styles</option>
-              </select>
-            </label>
-            <button onClick={() => setZoom((z) => Math.max(0.6, z - 0.2))} aria-label="Zoom out">
-              −
-            </button>
-            <button onClick={() => setZoom((z) => Math.min(2, z + 0.2))} aria-label="Zoom in">
-              +
-            </button>
-            <button onClick={() => setZoom(1)}>Reset zoom</button>
+          <div className="design-stats">
             <span>
-              {data.resources.length} / {data.total} references · dashed = hypothesis
+              {data.resources.length} references <span aria-hidden="true">/</span>{' '}
+              {data.nodes.length} nodes <span aria-hidden="true">/</span> {data.edges.length}{' '}
+              connections
+            </span>
+            <span>
+              {data.resources.filter((r) => r.design?.status === 'analyzed').length} analyzed ·{' '}
+              {data.resources.filter((r) => r.design?.status !== 'analyzed').length} awaiting image
+              review
             </span>
           </div>
           {data.truncated && (
             <p role="status">
-              Showing a bounded graph (30 references / 120 nodes). Narrow the search to explore
-              more.
+              This overview is limited to 100 references / 300 nodes. Not all records are shown.
             </p>
           )}
-          {!nodes.length ? (
-            <p>No references found. Try another domain or task.</p>
-          ) : (
-            <div className="design-workspace">
-              <section
-                className="design-canvas"
-                aria-label="Relationship graph. Scroll to pan, Tab to select nodes."
-                tabIndex={0}
+          <div className={`network-stage${selectedNode ? ' has-selection' : ''}`} ref={stage}>
+            <NetworkCanvas
+              data={data}
+              selected={selected}
+              highlight={filtered ? matches : null}
+              onSelect={choose}
+              controls={controls}
+            />
+            <div className="network-search">
+              <span aria-hidden="true">⌕</span>
+              <input
+                aria-label="Search references and features"
+                placeholder="Search references, features, styles…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                autoComplete="off"
+              />
+              <select
+                aria-label="Design domain"
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
               >
-                <svg
-                  width={900 * zoom}
-                  height={height * zoom}
-                  viewBox={`0 0 900 ${height}`}
-                  role="group"
-                  aria-label="Resources connected to visual features and styles"
+                <option value="">All domains</option>
+                {DOMAINS.map((d) => (
+                  <option key={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+            <div className="network-topline">
+              <span>{filtered ? `${matches.size} matching nodes` : 'Explore the connections'}</span>
+              <button onClick={() => setBrowse(!browse)} aria-expanded={browse}>
+                Browse nodes
+              </button>
+              {filtered && (
+                <button
+                  onClick={() => {
+                    setQuery('');
+                    setDomain('');
+                    setKind('');
+                  }}
                 >
-                  <text x="25" y="22">
-                    REFERENCES
-                  </text>
-                  <text x="315" y="22">
-                    DOMAINS / FEATURES
-                  </text>
-                  <text x="605" y="22">
-                    STYLE HYPOTHESES
-                  </text>
-                  {edges.map((e, i) => {
-                    const a = positions.get(e.source)!,
-                      b = positions.get(e.target)!;
-                    return (
-                      <path
-                        key={i}
-                        d={`M${a.x + 230},${a.y + 20} C${a.x + 265},${a.y + 20} ${b.x - 30},${b.y + 20} ${b.x},${b.y + 20}`}
-                        fill="none"
-                        stroke="black"
-                        strokeWidth={e.source === selected || e.target === selected ? 2 : 0.7}
-                        strokeDasharray={e.hypothesis ? '5 5' : undefined}
-                      />
-                    );
-                  })}
-                  {nodes.map((n) => {
-                    const p = positions.get(n.id)!;
-                    return (
-                      <g
-                        key={n.id}
-                        role="button"
-                        tabIndex={0}
-                        aria-label={`${n.type}: ${n.label}`}
-                        aria-pressed={selected === n.id}
-                        onClick={() => choose(n.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            choose(n.id);
-                          }
-                          if (e.key === 'Escape') setSelected('');
-                        }}
-                        className="design-node"
-                      >
-                        <title>{n.label}</title>
-                        <rect
-                          x={p.x}
-                          y={p.y}
-                          width="230"
-                          height="42"
-                          rx={n.type === 'resource' ? 0 : 20}
-                          fill={selected === n.id ? 'black' : 'white'}
-                          stroke="black"
-                        />
-                        <text
-                          x={p.x + 12}
-                          y={p.y + 26}
-                          fill={selected === n.id ? 'white' : 'black'}
-                        >
-                          {n.label.length > 28 ? n.label.slice(0, 27) + '…' : n.label}
-                        </text>
-                      </g>
-                    );
-                  })}
-                </svg>
-              </section>
-              <aside className="design-detail" aria-label="Selected evidence" aria-live="polite">
-                <h2>{data.nodes.find((n) => n.id === selected)?.label || 'Follow a connection'}</h2>
-                {!selected && (
-                  <p>Select a reference, feature or style to inspect its sources and reasoning.</p>
-                )}
-                {selected && (
+                  Clear filters
+                </button>
+              )}
+            </div>
+            {browse && (
+              <div className="network-node-list" aria-label="Browse graph nodes">
+                {data.nodes
+                  .filter((n) => !filtered || matches.has(n.id))
+                  .map((n) => (
+                    <button key={n.id} onClick={() => choose(n.id)}>
+                      <span style={{background: COLORS[n.type]}} />
+                      {n.type}: {n.label}
+                    </button>
+                  ))}
+                {filtered && !matches.size && <p>No matching nodes.</p>}
+              </div>
+            )}
+            {selectedNode && (
+              <aside className="design-detail" aria-label="Selected evidence">
+                <button
+                  className="detail-close"
+                  aria-label="Close evidence"
+                  onClick={() => choose('')}
+                >
+                  ×
+                </button>
+                <p className="detail-kind">
+                  {NAMES[selectedNode.type]} · {related.length} connections
+                </p>
+                <h2>{selectedNode.label.replace(/https:\/\/t\.co\/\S+/g, '').trim()}</h2>
+                {resources.length > 0 && (
                   <label className="design-image-toggle">
                     <input
                       type="checkbox"
                       checked={images}
                       onChange={(e) => setImages(e.target.checked)}
                     />{' '}
-                    Load original images for this selection (contacts source hosts)
+                    Show original images (loads from source)
                   </label>
                 )}
                 {resources.map((r) => (
                   <article key={r.id}>
-                    <h3>{r.title}</h3>
+                    <h3>{r.title.replace(/https:\/\/t\.co\/\S+/g, '').trim()}</h3>
                     <a href={r.source.url} target="_blank" rel="noreferrer">
-                      Original post
+                      Original post ↗
                     </a>
-                    <p>
-                      {r.design?.status ?? 'unanalyzed'} ·{' '}
-                      {r.design?.reason ?? 'No visual analysis yet.'}
-                    </p>
+                    <p className="reference-summary">{r.summary}</p>
+                    <details className="observation-notes">
+                      <summary>
+                        {r.design?.status === 'analyzed'
+                          ? 'Image reviewed'
+                          : 'Awaiting image review'}{' '}
+                        · Observation notes
+                      </summary>
+                      <p>{r.design?.reason ?? 'No visual analysis yet.'}</p>
+                    </details>
                     {r.design?.images.map((i) => (
                       <div key={i.url}>
                         <a href={i.url} target="_blank" rel="noreferrer">
-                          Original image
+                          Original image ↗
                         </a>
                         {images && <OriginalImage url={i.url} title={r.title} />}
                       </div>
@@ -265,33 +282,65 @@ export function DesignGraph() {
                     {related
                       .filter((e) => e.resourceId === r.id)
                       .map((e, i) => (
-                        <div key={i} className="design-evidence">
+                        <div className="design-evidence" key={i}>
                           <strong>{data.nodes.find((n) => n.id === e.target)?.label}</strong>
                           <p>
                             {e.hypothesis
                               ? `Hypothesis · ${e.confidence} confidence`
-                              : e.confirmation
-                                ? `User-confirmed label: ${e.confirmation}`
-                                : 'Observed feature / evidence-based domain'}
+                              : 'Observed evidence'}
+                            {e.confirmation ? ` · ${e.confirmation}` : ''}
                           </p>
-                          <ul>
-                            {e.evidence.map((v, j) => (
-                              <li key={j}>{v}</li>
-                            ))}
-                          </ul>
+                          {e.evidence.map((t, j) => (
+                            <p key={j}>{t}</p>
+                          ))}
                         </div>
                       ))}
                   </article>
                 ))}
-                {selected && (
-                  <p>
-                    Compare references with the user before translating shared features into design
-                    requirements.
-                  </p>
-                )}
               </aside>
+            )}
+            <div className="network-bottom">
+              <div className="network-legend" aria-label="Graph legend">
+                {(Object.keys(NAMES) as GraphNode['type'][]).map((type) => (
+                  <button
+                    key={type}
+                    aria-pressed={kind === type}
+                    onClick={() => setKind(kind === type ? '' : type)}
+                  >
+                    <span
+                      className="legend-swatch"
+                      style={{color: COLORS[type]}}
+                      aria-hidden="true"
+                    />
+                    {NAMES[type]} <small>{data.nodes.filter((n) => n.type === type).length}</small>
+                  </button>
+                ))}
+              </div>
+              <div className="network-tools">
+                <button aria-label="Zoom out" onClick={() => controls.current?.zoom(1 / 1.2)}>
+                  −
+                </button>
+                <button aria-label="Zoom in" onClick={() => controls.current?.zoom(1.2)}>
+                  +
+                </button>
+                <button aria-label="Reset zoom to 100%" onClick={() => controls.current?.reset()}>
+                  100%
+                </button>
+                <button aria-label="Fit graph to view" onClick={() => controls.current?.fit()}>
+                  ⊡
+                </button>
+                <button aria-label="Toggle fullscreen" onClick={() => void fullscreen()}>
+                  ⛶
+                </button>
+              </div>
             </div>
-          )}
+          </div>
+          <footer className="design-caption">
+            <span>Drag to explore · Scroll to zoom · Select a point for its evidence</span>
+            <span>
+              Dashed connections = unconfirmed style · Disconnected points = no visual analysis
+            </span>
+          </footer>
         </>
       )}
     </main>

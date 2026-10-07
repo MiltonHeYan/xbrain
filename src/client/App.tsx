@@ -1,3 +1,4 @@
+import {BrandMark} from './BrandMark.js';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import type {Bookmark} from '../shared/types.js';
 import {errorMessage} from '../shared/types.js';
@@ -7,7 +8,11 @@ import {filterBookmarks} from './selectors.js';
 import {BookmarkCard} from './components/BookmarkCard.js';
 import {DetailDialog} from './components/DetailDialog.js';
 
-export function App() {
+export function App({
+  embedded = false,
+  active = true,
+  onCount,
+}: {embedded?: boolean; active?: boolean; onCount?: (count: number) => void} = {}) {
   const repository = useRef(new LibraryRepository());
   const [items, setItems] = useState<Bookmark[]>([]);
   const [demo, setDemo] = useState(false);
@@ -20,7 +25,7 @@ export function App() {
     () => filterBookmarks(items, 'all', '', query, 'newest'),
     [items, query],
   );
-  const active = items.find((b) => b.id === selected);
+  const activeBookmark = items.find((b) => b.id === selected);
   async function load() {
     setLoading(true);
     setError('');
@@ -40,6 +45,10 @@ export function App() {
     void load();
   }, []);
   useEffect(() => {
+    if (!loading) onCount?.(filtered.length);
+  }, [loading, filtered.length, onCount]);
+  useEffect(() => {
+    if (!active) return;
     function key(e: KeyboardEvent) {
       if (e.key === '/' && !(document.activeElement instanceof HTMLInputElement) && !selected) {
         e.preventDefault();
@@ -48,22 +57,24 @@ export function App() {
     }
     document.addEventListener('keydown', key);
     return () => document.removeEventListener('keydown', key);
-  }, [selected]);
+  }, [selected, active]);
   return (
     <>
       <a className="skip" href="#main">
         Skip to collection
       </a>
       <div className="collection">
-        <header className="topbar">
-          <a className="brand" href="/" aria-label="xrecall home">
-            xrecall
-          </a>
-          <a href="/?view=graph">Reference graph</a>
-          <span className="collection-count" id="result-count" aria-live="polite">
-            {loading ? '' : `${filtered.length} bookmarks`}
-          </span>
-        </header>
+        {!embedded && (
+          <header className="topbar">
+            <a className="brand" href="/" aria-label="Xbrain home">
+              <BrandMark /> Xbrain
+            </a>
+            <a href="/?view=graph">Reference graph</a>
+            <span className="collection-count" id="result-count" aria-live="polite">
+              {loading ? '' : `${filtered.length} bookmarks`}
+            </span>
+          </header>
+        )}
         <main id="main">
           <label className="search">
             <span className="sr-only">Search bookmarks</span>
@@ -101,17 +112,17 @@ export function App() {
                 <p>
                   {items.length
                     ? 'Try another search.'
-                    : 'Ask your agent to sync your X bookmarks with the xrecall Skill. They’ll appear here.'}
+                    : 'Ask your agent to sync your X bookmarks with the Xbrain Skill. They’ll appear here.'}
                 </p>
               </div>
             )}
           </section>
         </main>
       </div>
-      {active && (
+      {active && activeBookmark && (
         <DetailDialog
-          key={active.id}
-          bookmark={active}
+          key={activeBookmark.id}
+          bookmark={activeBookmark}
           demo={demo}
           onClose={() => setSelected(null)}
         />

@@ -1,6 +1,14 @@
 import {isObject} from './types.js';
 
-export const DOMAINS = ['web-ui', 'app-ui', 'interior', 'graphic', 'other'] as const;
+export const DOMAINS = [
+  'web-ui',
+  'app-ui',
+  'hardware',
+  'architecture',
+  'interior',
+  'graphic',
+  'other',
+] as const;
 export const FEATURE_KINDS = [
   'layout',
   'spacing',

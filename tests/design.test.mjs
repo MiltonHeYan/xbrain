@@ -88,7 +88,7 @@ test('graph shares labels while retaining source-specific evidence and bounded n
   assert.notDeepEqual(edges[0].evidence,edges[1].evidence);
   assert.equal(graph.edges.filter(e => e.source === resources[4].id).length,0);
   const many = Array.from({length:1000},(_,i)=>({...resources[0],id:'fixture-'+i}));
-  const capped = designGraph(many); assert.equal(capped.resources.length,30); assert.ok(capped.nodes.length<=120); assert.equal(capped.truncated,true);
+  const capped = designGraph(many); assert.equal(capped.resources.length,100); assert.ok(capped.nodes.length<=300); assert.equal(capped.truncated,true);
 });
 
 test('design read API is opt-in, same-origin, filtered and never writes the gallery', async t => {
@@ -123,4 +123,14 @@ test('gallery image capture keeps original pointers unanalyzed and invalidates c
   assert.equal(first.status,'unanalyzed'); assert.equal(first.images[0].observed,false); assert.equal(first.styles.length,0);
   assert.equal(capturedDesign(fixture().design,media).status,'stale');
   assert.deepEqual(capturedDesign(first,media),first);
+});
+
+
+test('hardware and architecture classify independently with observed evidence', async t => {
+  const store = join(await temporary(t), 'memory.json');
+  const hardware = fixture(); hardware.source.id = 'fictional-hardware'; hardware.design.domains[0].label = 'hardware';
+  const architecture = fixture(); architecture.source.id = 'fictional-architecture'; architecture.design.domains[0].label = 'architecture';
+  await putResources(store, [hardware, architecture]);
+  assert.equal((await search(store, '', 5, undefined, {domain:'hardware'})).results[0].resource.source.id, 'fictional-hardware');
+  assert.equal((await search(store, '', 5, undefined, {domain:'architecture'})).results[0].resource.source.id, 'fictional-architecture');
 });

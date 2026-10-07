@@ -1,13 +1,13 @@
 ---
-name: xrecall
+name: xbrain
 description: Organize authorized saved references into evidence-based design categories, visual features and tentative styles, then retrieve original images and sources for an Agent's design task. Use when someone has saved UI, graphic or interior references but cannot describe the style they want.
 ---
 
-# xrecall
+# Xbrain
 
 Help the user turn scattered references into inspectable design context. Connectors collect source material; this Skill organizes, retrieves and helps interpret it. A bookmark is not endorsement, a tested tool or a uniform personal preference.
 
-Keep this entire repository. Requires Node 22.12+, Git and local command execution. Run `npm ci` once, then `npm run build`. Resolve commands relative to the installed repository; preserve existing data paths. No model, connector credential or memory backend is bundled.
+Keep this entire repository. Xbrain was previously named xrecall; existing data paths, exports, protocols and CLI entrypoints remain compatible. The repository URL is still `https://github.com/MiltonHeYan/xbrain` until a separately authorized rename. Requires Node 22.12+, Git and local command execution. Run `npm ci` once, then `npm run build`. Resolve commands relative to the installed repository; preserve existing data paths. No model, connector credential or memory backend is bundled.
 
 ## Design references
 

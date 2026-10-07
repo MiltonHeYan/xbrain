@@ -23,7 +23,7 @@ export interface DesignGraph {
 }
 /** Stable bounded projection, not inferred semantic similarity. No edges from stale analysis. */
 export function designGraph(resources: Resource[]): DesignGraph {
-  const selected = resources.slice(0, 30);
+  const selected = resources.slice(0, 100);
   const nodes: GraphNode[] = selected.map((r) => ({id: r.id, label: r.title, type: 'resource'}));
   const known = new Set(nodes.map((n) => n.id));
   const edges: GraphEdge[] = [];
@@ -41,7 +41,7 @@ export function designGraph(resources: Resource[]): DesignGraph {
     ) => {
       const id = JSON.stringify([type, label.trim().toLowerCase()]);
       if (!known.has(id)) {
-        if (nodes.length >= 120) {
+        if (nodes.length >= 300) {
           truncated = true;
           return;
         }
