@@ -9,11 +9,16 @@
 <table>
 <tr>
 <td><a href="https://cursor.com/link/prompt?text=https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%20%E3%82%92%E8%AA%AD%E3%81%BF%E3%80%81xrecall%20%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%A8%E8%87%AA%E5%88%86%E3%81%AE%20X%20%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%81%AE%E5%90%8C%E6%9C%9F%E3%82%92%E6%A1%88%E5%86%85%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>Cursor で開く ↗</strong></a></td>
-<td><a href="#copy-prompt"><strong>ほかの Agent · 指示をコピー ↓</strong></a></td>
+<td><a href="#copy-prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" width="20" height="20" alt="Codex"></picture> <strong>Codex · コピー</strong></a></td>
+<td><a href="#copy-prompt"><img src="docs/assets/agents/claude-code.svg" width="20" height="20" alt="Claude Code"> <strong>Claude Code · コピー</strong></a></td>
+<td><a href="#copy-prompt"><img src="docs/assets/agents/openclaw.svg" width="20" height="20" alt="OpenClaw"> <strong>OpenClaw · コピー</strong></a></td>
+<td><a href="#copy-prompt"><strong>ほかの Agent · コピー ↓</strong></a></td>
 </tr>
 </table>
 
 Cursor には下の指示が事前入力され、実行前に確認が必要です。Codex、Claude Code、OpenClaw などではコードブロックのコピーボタンを使い、既存の Agent に貼り付けてください。自動インストールやアカウント接続は行いません。
+
+GitHub はデスクトップアプリのプロトコルリンクを削除するため、Codex、Claude、Claude Code、VS Code、OpenClaw、Hermes では下の指示をコピーしてください。
 
 <a name="copy-prompt"></a>
 

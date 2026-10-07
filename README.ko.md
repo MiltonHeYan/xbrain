@@ -9,11 +9,16 @@
 <table>
 <tr>
 <td><a href="https://cursor.com/link/prompt?text=https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%20%EB%A5%BC%20%EC%9D%BD%EA%B3%A0%20xrecall%20%EC%84%A4%EC%B9%98%EC%99%80%20%EB%82%B4%20X%20%EB%B6%81%EB%A7%88%ED%81%AC%20%EB%8F%99%EA%B8%B0%ED%99%94%EB%A5%BC%20%EC%95%88%EB%82%B4%ED%95%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94."><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>Cursor에서 열기 ↗</strong></a></td>
-<td><a href="#copy-prompt"><strong>다른 Agent · 지시 복사 ↓</strong></a></td>
+<td><a href="#copy-prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" width="20" height="20" alt="Codex"></picture> <strong>Codex · 복사</strong></a></td>
+<td><a href="#copy-prompt"><img src="docs/assets/agents/claude-code.svg" width="20" height="20" alt="Claude Code"> <strong>Claude Code · 복사</strong></a></td>
+<td><a href="#copy-prompt"><img src="docs/assets/agents/openclaw.svg" width="20" height="20" alt="OpenClaw"> <strong>OpenClaw · 복사</strong></a></td>
+<td><a href="#copy-prompt"><strong>다른 Agent · 복사 ↓</strong></a></td>
 </tr>
 </table>
 
 Cursor에는 아래 지시가 미리 입력되며 실행 전에 확인해야 합니다. Codex, Claude Code, OpenClaw 등에서는 코드 블록의 복사 버튼을 눌러 기존 Agent에 붙여 넣으세요. 소프트웨어 설치나 계정 연결은 자동으로 진행되지 않습니다.
+
+GitHub는 데스크톱 앱 프로토콜 링크를 제거하므로 Codex, Claude, Claude Code, VS Code, OpenClaw, Hermes에서는 아래 지시를 복사하세요.
 
 <a name="copy-prompt"></a>
 
