@@ -8,11 +8,11 @@
 
 <table>
 <tr>
-<td><a href="https://cursor.com/link/prompt?text=Read%20https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%2C%20help%20me%20install%20xrecall%2C%20and%20guide%20me%20through%20syncing%20my%20X%20bookmarks."><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>Open in Cursor ↗</strong></a></td>
+<td><a href="https://cursor.com/link/prompt?text=Read%20https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%2C%20help%20me%20install%20xrecall%2C%20and%20guide%20me%20through%20syncing%20my%20X%20bookmarks."><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>Cursor ↗</strong></a></td>
 <td><a href="#copy-prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" width="20" height="20" alt="Codex"></picture> <strong>Codex · Copy</strong></a></td>
 <td><a href="#copy-prompt"><img src="docs/assets/agents/claude-code.svg" width="20" height="20" alt="Claude Code"> <strong>Claude Code · Copy</strong></a></td>
 <td><a href="#copy-prompt"><img src="docs/assets/agents/openclaw.svg" width="20" height="20" alt="OpenClaw"> <strong>OpenClaw · Copy</strong></a></td>
-<td><a href="#copy-prompt"><strong>Other Agents · Copy ↓</strong></a></td>
+<td><a href="#copy-prompt"><strong>Other · Copy</strong></a></td>
 </tr>
 </table>
 

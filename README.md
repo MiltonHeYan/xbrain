@@ -8,11 +8,11 @@
 
 <table>
 <tr>
-<td><a href="https://cursor.com/link/prompt?text=%E8%AF%B7%E9%98%85%E8%AF%BB%20https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%20%EF%BC%8C%E5%B8%AE%E6%88%91%E5%AE%89%E8%A3%85%20xrecall%EF%BC%8C%E5%B9%B6%E5%BC%95%E5%AF%BC%E6%88%91%E5%90%8C%E6%AD%A5%E8%87%AA%E5%B7%B1%E7%9A%84%20X%20%E6%94%B6%E8%97%8F%E3%80%82"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>在 Cursor 中打开 ↗</strong></a></td>
+<td><a href="https://cursor.com/link/prompt?text=%E8%AF%B7%E9%98%85%E8%AF%BB%20https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%20%EF%BC%8C%E5%B8%AE%E6%88%91%E5%AE%89%E8%A3%85%20xrecall%EF%BC%8C%E5%B9%B6%E5%BC%95%E5%AF%BC%E6%88%91%E5%90%8C%E6%AD%A5%E8%87%AA%E5%B7%B1%E7%9A%84%20X%20%E6%94%B6%E8%97%8F%E3%80%82"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>Cursor ↗</strong></a></td>
 <td><a href="#copy-prompt"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/openai-dark.svg"><img src="docs/assets/agents/openai.svg" width="20" height="20" alt="Codex"></picture> <strong>Codex · 复制</strong></a></td>
 <td><a href="#copy-prompt"><img src="docs/assets/agents/claude-code.svg" width="20" height="20" alt="Claude Code"> <strong>Claude Code · 复制</strong></a></td>
 <td><a href="#copy-prompt"><img src="docs/assets/agents/openclaw.svg" width="20" height="20" alt="OpenClaw"> <strong>OpenClaw · 复制</strong></a></td>
-<td><a href="#copy-prompt"><strong>其他 Agent · 复制 ↓</strong></a></td>
+<td><a href="#copy-prompt"><strong>其他 · 复制</strong></a></td>
 </tr>
 </table>
 
