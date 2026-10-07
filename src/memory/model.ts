@@ -1,3 +1,4 @@
+import {canonicalSourceUrl} from '../shared/bookmarks.js';
 import {createHash} from 'node:crypto';
 import {validateDesign, matchesDesign, validateDesignFilters} from '../shared/design.js';
 import type {DesignAnalysis, DesignFilters} from '../shared/design.js';
@@ -62,7 +63,7 @@ export function validateResource(input: unknown): Resource {
     throw new Error('Resource ID does not match its source.');
   return {
     id,
-    source: {provider, id: sourceId, url: url.href},
+    source: {provider, id: sourceId, url: canonicalSourceUrl(provider, sourceId, url.href)},
     title: string(input.title, 'title', 500),
     text: string(input.text, 'text', 50000),
     summary: string(input.summary, 'summary'),

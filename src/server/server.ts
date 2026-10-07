@@ -84,7 +84,10 @@ const server = http.createServer(async (req, res) => {
       ) {
         return json(res, 200, await readStore(store));
       }
-      if (req.method === 'GET' && url.pathname === '/api/design') {
+      if (
+        req.method === 'GET' &&
+        (url.pathname === '/api/design' || url.pathname === '/api/references')
+      ) {
         if (!process.env.MEMORY_STORE)
           return json(res, 409, {
             error:
@@ -100,9 +103,27 @@ const server = http.createServer(async (req, res) => {
           throw new Error('Search input is too long.');
         const data = await readMemory(path.resolve(process.env.MEMORY_STORE));
         validateDesignFilters(filters);
-        const resources = query.trim()
+        let resources = query.trim()
           ? searchResources(data.resources, query, 10000, filters).map((x) => x.resource)
           : data.resources.filter((r) => matchesDesign(r.design, filters));
+        if (url.pathname === '/api/references') {
+          const offset = Number(url.searchParams.get('offset') ?? 0);
+          if (!Number.isSafeInteger(offset) || offset < 0 || offset > 10000)
+            throw new Error('Invalid reference offset.');
+          return json(res, 200, {
+            resources: resources.slice(offset, offset + 100),
+            total: data.resources.length,
+            matched: resources.length,
+            offset,
+            hasMore: offset + 100 < resources.length,
+          });
+        }
+        const focusId = url.searchParams.get('id');
+        if (focusId) {
+          const focus = resources.find((r) => r.id === focusId);
+          if (!focus) return json(res, 404, {error: 'Reference not found in this collection.'});
+          resources = [focus, ...resources.filter((r) => r.id !== focusId)];
+        }
         return json(res, 200, designGraph(resources));
       }
       if (req.method === 'POST' && url.pathname === '/api/import') {

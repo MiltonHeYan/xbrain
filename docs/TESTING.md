@@ -35,7 +35,12 @@ Use an isolated loopback server with an explicit private `BOOKMARK_STORE` and
 synthetic records for screenshots. Verify desktop and mobile-sized layouts,
 search/topic/favorite filtering, list/grid, no-result recovery, keyboard focus,
 import errors and duplicates, detail cancel/save, export/download, refresh and
-sample/library separation. Images must remain absent until session-only opt-in.
+sample/library separation. Memory Gallery images load by default; verify its off/on
+preference survives refresh. Graph and legacy detail images must remain absent
+until per-selection opt-in. With 150+ synthetic memory records, verify paging and
+search reach beyond the first 100 and opening those records in Graph preserves their IDs.
+Check static preview with a 200 HTML response for absent APIs and ensure actual
+API errors never silently switch storage.
 
 Follow [CLEAN_AGENT_ACCEPTANCE.md](CLEAN_AGENT_ACCEPTANCE.md) in a fresh agent
 context against an isolated server for authorized live-import acceptance. Compare

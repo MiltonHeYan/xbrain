@@ -64,7 +64,7 @@ test('arrow keys activate the other tab and move focus; Home returns to Gallery'
   expect(gallery).toHaveAttribute('aria-selected', 'true');
 });
 
-test('selected memory supplies identical stable IDs to both views without requesting legacy data', async () => {
+test('selected memory supplies the Gallery without requesting legacy data', async () => {
   const resources = Array.from({length: 61}, (_, i) => ({
     id: `fixture-${i}`,
     title: `Fixture ${i}`,
@@ -77,7 +77,7 @@ test('selected memory supplies identical stable IDs to both views without reques
     savedReason: null,
     updatedAt: '2026-10-07T00:00:00Z',
   }));
-  const data = {resources, total: 61, nodes: [], edges: [], truncated: false};
+  const data = {resources, total: 61, matched: 61, offset: 0, hasMore: false};
   const fetch = vi.fn().mockResolvedValue({ok: true, status: 200, json: async () => data});
   vi.stubGlobal('fetch', fetch);
   const {container} = render(<Workspace />);
@@ -88,9 +88,8 @@ test('selected memory supplies identical stable IDs to both views without reques
     ),
   ).toEqual(resources.map((r) => r.id));
   fireEvent.click(screen.getByRole('tab', {name: 'Graph'}));
-  expect(screen.getByTestId('graph-ids').textContent).toBe(resources.map((r) => r.id).join(','));
   expect(fetch).toHaveBeenCalledTimes(1);
-  expect(fetch.mock.calls[0]![0]).toBe('/api/design');
+  expect(fetch.mock.calls[0]![0]).toBe('/api/references');
 });
 
 test('Gallery loads supplied source images by default, preserves the toggle, and reports failed images', async () => {
@@ -114,9 +113,9 @@ test('Gallery loads supplied source images by default, preserves the toggle, and
       },
     ],
     total: 1,
-    nodes: [],
-    edges: [],
-    truncated: false,
+    matched: 1,
+    offset: 0,
+    hasMore: false,
   };
   vi.stubGlobal(
     'fetch',
@@ -136,4 +135,59 @@ test('Gallery loads supplied source images by default, preserves the toggle, and
   expect(screen.queryByRole('img')).not.toBeInTheDocument();
   fireEvent.click(screen.getByLabelText('Show source images'));
   expect(screen.getByRole('img')).toBeInTheDocument();
+});
+
+test('static HTML response falls back to the existing browser Gallery', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi
+      .fn()
+      .mockResolvedValue(
+        new Response('<!doctype html><html></html>', {headers: {'Content-Type': 'text/html'}}),
+      ),
+  );
+  render(<Workspace />);
+  expect(await screen.findByLabelText('Gallery search')).toBeInTheDocument();
+});
+
+for (const status of [403, 500]) {
+  test(`API ${status} error does not fall back to a different library`, async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({error: 'Synthetic failure'}), {
+          status,
+          headers: {'Content-Type': 'application/json'},
+        }),
+      ),
+    );
+    render(<Workspace />);
+    expect(await screen.findByRole('alert')).toHaveTextContent('Synthetic failure');
+    expect(screen.queryByLabelText('Gallery search')).not.toBeInTheDocument();
+  });
+}
+test('network errors and unreadable JSON do not silently change libraries', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Synthetic offline')));
+  const first = render(<Workspace />);
+  expect(await screen.findByRole('alert')).toHaveTextContent('Synthetic offline');
+  first.unmount();
+  vi.stubGlobal(
+    'fetch',
+    vi
+      .fn()
+      .mockResolvedValue(new Response('{broken', {headers: {'Content-Type': 'application/json'}})),
+  );
+  render(<Workspace />);
+  expect(await screen.findByRole('alert')).toHaveTextContent('unreadable response');
+  expect(screen.queryByLabelText('Gallery search')).not.toBeInTheDocument();
+});
+
+test('invalid successful API JSON reports an error instead of mounting a broken collection', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(new Response('{}', {headers: {'Content-Type': 'application/json'}})),
+  );
+  render(<Workspace />);
+  expect(await screen.findByRole('alert')).toHaveTextContent('invalid reference collection');
+  expect(screen.queryByLabelText('Gallery search')).not.toBeInTheDocument();
 });

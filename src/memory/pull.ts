@@ -1,3 +1,4 @@
+import {canonicalSourceUrl} from '../shared/bookmarks.js';
 import {digest, resourceId, validateResource} from './model.js';
 import {readMemory, updateMemory} from './store.js';
 import {applyResources} from './service.js';
@@ -66,7 +67,7 @@ export async function pullResources(
             id: item.id,
             title: item.title,
             text: item.text,
-            url: item.url,
+            url: canonicalSourceUrl(source.provider, item.id, item.url),
           };
           const revision = digest(content);
           if (unique.has(id)) {
@@ -81,6 +82,14 @@ export async function pullResources(
             continue;
           }
           const captured = data.ingestion.captures[id];
+          const old = data.resources.find((r) => r.id === id);
+          // A first pull may follow put/capture. Attach provenance without rewriting
+          // unchanged source content, custom titles, analysis or distillation state.
+          const sameContent =
+            old &&
+            old.text === item.text &&
+            old.source.url === content.url &&
+            (!captured || captured.title === undefined || captured.title === item.title);
           if (captured?.updatedAt && item.updatedAt && item.updatedAt < captured.updatedAt) {
             counts.skippedOlder++;
             continue;
@@ -88,16 +97,21 @@ export async function pullResources(
           if (
             captured?.updatedAt &&
             item.updatedAt === captured.updatedAt &&
-            captured.revision !== revision
+            captured.revision !== revision &&
+            !sameContent
           )
             throw new Error('Conflicting source version; page not committed.');
-          if (captured?.revision === revision) {
-            if (item.updatedAt && (!captured.updatedAt || item.updatedAt > captured.updatedAt))
-              captured.updatedAt = item.updatedAt;
+          if (captured?.revision === revision || sameContent) {
+            data.ingestion.captures[id] = {
+              revision,
+              updatedAt: item.updatedAt ?? captured?.updatedAt ?? null,
+              title: item.title,
+            };
+            const pending = data.ingestion.pending[id];
+            if (pending) pending.sourceRevision = revision;
             counts.unchanged++;
             continue;
           }
-          const old = data.resources.find((r) => r.id === id);
           const resource = validateResource({
             source: {provider: source.provider, id: item.id, url: item.url},
             title: old && old.title !== captured?.title ? old.title : item.title,

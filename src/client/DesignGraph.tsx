@@ -1,3 +1,4 @@
+import {apiUnavailable, readApiJson} from './http.js';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {DOMAINS} from '../shared/design.js';
 import type {DesignGraph as GraphData, GraphNode} from '../shared/design-graph.js';
@@ -53,18 +54,20 @@ export function DesignGraph({
       return;
     }
     const abort = new AbortController();
-    fetch('/api/design', {signal: abort.signal})
+    fetch(`/api/design${focusId ? '?id=' + encodeURIComponent(focusId) : ''}`, {
+      signal: abort.signal,
+    })
       .then(async (r) => {
-        const d = await r.json();
-        if (!r.ok) throw Error(d.error || 'Could not load design memory.');
-        setData(d);
+        if (apiUnavailable(r))
+          throw Error('Graph requires the local server with MEMORY_STORE configured.');
+        setData((await readApiJson(r)) as GraphData);
       })
       .catch((e) => {
         if (!abort.signal.aborted)
           setError(e instanceof Error ? e.message : 'Could not load design memory.');
       });
     return () => abort.abort();
-  }, [providedData]);
+  }, [providedData, focusId]);
   useEffect(() => {
     if (data) onCount?.(data.total);
   }, [data, onCount]);

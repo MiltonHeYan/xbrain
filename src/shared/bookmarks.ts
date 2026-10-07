@@ -35,6 +35,27 @@ export function safeUrl(value: unknown): string {
   }
 }
 
+/** X post identity is the numeric ID, independent of handle, host alias or tracking query. */
+export const xPostUrl = (id: string): string => `https://x.com/i/web/status/${id}`;
+export function canonicalSourceUrl(provider: string, id: string, value: string): string {
+  if (!value || provider !== 'x' || !/^\d+$/.test(id)) return value;
+  const url = new URL(value);
+  const match = url.pathname.match(
+    /^\/(?:[A-Za-z0-9_]{1,15}|i\/web)\/status\/(\d+)(?:\/(?:photo|video)\/\d+)?\/?$/,
+  );
+  if (
+    url.protocol === 'https:' &&
+    !url.username &&
+    !url.password &&
+    ['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com', 'mobile.twitter.com'].includes(
+      url.hostname,
+    ) &&
+    match?.[1] === id
+  )
+    return xPostUrl(id);
+  return value;
+}
+
 function unwrap(input: unknown, maxBytes = MAX_IMPORT_BYTES) {
   for (let depth = 0; depth < 5; depth++) {
     if (typeof input === 'string') {
@@ -148,7 +169,7 @@ function normalizeRows(input: unknown, maxBookmarks: number): ImportResult {
         : (users.get(String(row.author_id)) ?? {});
     const username = text(author.username ?? author.screen_name, 30).replace(/^@/, '');
     const handle = /^[A-Za-z0-9_]{1,15}$/.test(username) ? username : '';
-    const fallback = /^\d+$/.test(id) ? `https://x.com/${handle || 'i'}/status/${id}` : '';
+    const fallback = /^\d+$/.test(id) ? xPostUrl(id) : '';
     const tags = Array.isArray(row.tags)
       ? [
           ...new Set(
@@ -198,7 +219,7 @@ function normalizeRows(input: unknown, maxBookmarks: number): ImportResult {
       id,
       text: text(postText),
       author: {name: text(author.name, 200) || handle || 'Unknown author', username: handle},
-      url: safeUrl(row.url) || fallback,
+      url: canonicalSourceUrl('x', id, safeUrl(row.url) || fallback),
       createdAt: date(row.createdAt ?? row.created_at),
       savedAt: date(row.savedAt) || now,
       tags,

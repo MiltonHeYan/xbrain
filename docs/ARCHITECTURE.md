@@ -11,7 +11,10 @@
 - `src/client/` contains React state, selectors and a repository adapter. Components
   own the minimal cards, search and read-only native detail dialog. The adapter selects the
   local API or static-host browser storage and fails closed on load/save errors.
-  Raw source strings are rendered as text. External images require session consent.
+  Raw source strings are rendered as text. Memory Gallery previews load saved source images
+  by default with a persisted browser toggle. Graph and legacy detail images require
+  an explicit per-selection opt-in. Gallery pages/searches the full selected memory;
+  Graph renders a bounded projection of that same source.
 - `src/agent/bridge.ts` only sends enriched JSON to an explicit loopback origin,
   rejects redirects, and reads it back to report counts. The user's agent owns
   source authorization and model calls; the gallery never receives credentials.
