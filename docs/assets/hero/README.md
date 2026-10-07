@@ -36,3 +36,16 @@ The checked-in PNGs were rendered with `@resvg/resvg-js` 2.6.2, Arial system fon
 `loadSystemFonts: true`, and `fitTo: { mode: 'zoom', value: 2 }`. This optional
 artwork tool is not an application dependency. Review both rendered sizes before
 replacing the PNGs. The README `picture` selects the mobile PNG at 600px or below.
+
+## Generated visual, version 2
+
+`hero-v2-generated.png` was created with the built-in image_gen tool (not an API
+or paid CLI fallback). Its full prompt is in `hero-v2-prompt.txt`. It contains no
+brand logos. The paper/folio/task scene is conceptual artwork, not a screenshot
+or a claim of automatic synchronization.
+
+`compose-hero-v2.cjs` embeds the original X, Cursor and OpenAI SVG paths over the
+reserved blank areas, then adds exact title/labels. Thus no brand mark is
+AI-redrawn. With @resvg/resvg-js 2.6.2 available on NODE_PATH, run the script to
+rebuild `xrecall-hero-v2.png` (1536×1024). The old vector illustrations are retained
+as earlier alternatives. README references now select the generated v2 visual.

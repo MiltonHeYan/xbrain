@@ -19,8 +19,7 @@ https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md を読み、xrecall �
 </p>
 
 <picture>
-  <source media="(max-width: 600px)" srcset="docs/assets/hero/xrecall-hero-mobile.png">
-  <img src="docs/assets/hero/xrecall-hero.png" width="1200" alt="xrecall の流れ：X ブックマークを保存し、ローカルのリソース記憶に整理して、作業時に Agent が関連資料を検索し出典を引用します。">
+  <img src="docs/assets/hero/xrecall-hero-v2.png" width="1200" alt="xrecall の流れ：X ブックマークを保存し、ローカルのリソース記憶に整理して、作業時に Agent が関連資料を検索し出典を引用します。">
 </picture>
 
 リポジトリにアクセスしてローカルコマンドを実行できる Agent、Git、Node.js 22.12+ が必要です。同期前に利用可能なデータソースを選び、個人アカウントを認可してください。既定ではローカル保存のみで、外部 memory には自動接続しません。

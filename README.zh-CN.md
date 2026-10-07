@@ -19,8 +19,7 @@
 </p>
 
 <picture>
-  <source media="(max-width: 600px)" srcset="docs/assets/hero/xrecall-hero-mobile.png">
-  <img src="docs/assets/hero/xrecall-hero.png" width="1200" alt="xrecall 工作流：保存 X 收藏，整理成本地资源记忆，任务中由 Agent 检索相关资料并引用原始来源。">
+  <img src="docs/assets/hero/xrecall-hero-v2.png" width="1200" alt="xrecall 工作流：保存 X 收藏，整理成本地资源记忆，任务中由 Agent 检索相关资料并引用原始来源。">
 </picture>
 
 需要能访问仓库并执行本地命令的 Agent，以及 Git、Node.js 22.12+。同步前需选择可用的数据源并授权个人账号；默认只保存到本地，不自动连接远端 memory。

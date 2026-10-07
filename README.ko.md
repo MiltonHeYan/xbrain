@@ -19,8 +19,7 @@ https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md 를 읽고 xrecall 설
 </p>
 
 <picture>
-  <source media="(max-width: 600px)" srcset="docs/assets/hero/xrecall-hero-mobile.png">
-  <img src="docs/assets/hero/xrecall-hero.png" width="1200" alt="xrecall 흐름: X 북마크를 저장하고 로컬 리소스 기억으로 정리한 뒤, 작업 중 Agent가 관련 자료를 검색하고 원문 출처를 인용합니다.">
+  <img src="docs/assets/hero/xrecall-hero-v2.png" width="1200" alt="xrecall 흐름: X 북마크를 저장하고 로컬 리소스 기억으로 정리한 뒤, 작업 중 Agent가 관련 자료를 검색하고 원문 출처를 인용합니다.">
 </picture>
 
 저장소 접근과 로컬 명령 실행이 가능한 Agent, Git, Node.js 22.12+가 필요합니다. 동기화 전에 사용 가능한 데이터 소스를 선택하고 개인 계정을 승인해야 합니다. 기본값은 로컬 저장이며 원격 memory에 자동 연결하지 않습니다.

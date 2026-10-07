@@ -19,8 +19,7 @@ Read https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md, help me install 
 </p>
 
 <picture>
-  <source media="(max-width: 600px)" srcset="docs/assets/hero/xrecall-hero-mobile.png">
-  <img src="docs/assets/hero/xrecall-hero.png" width="1200" alt="xrecall workflow: save X bookmarks, distill local resource memory, then retrieve relevant notes and cite sources with your Agent.">
+  <img src="docs/assets/hero/xrecall-hero-v2.png" width="1200" alt="xrecall workflow: save X bookmarks, distill local resource memory, then retrieve relevant notes and cite sources with your Agent.">
 </picture>
 
 Requires an Agent with repository access and local command execution, Git and Node.js 22.12+. Before syncing, select an available source and authorize your personal account. Data stays local by default; no remote memory is connected automatically.
