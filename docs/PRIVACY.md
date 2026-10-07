@@ -124,3 +124,33 @@ collection data are separate decisions.
 This prototype has not undergone an independent security audit. No security
 certification, account-backup completeness, encrypted storage, or service-level
 guarantee is claimed.
+
+
+## Resource memory
+
+Resource memory is a separate local file and stays local without an explicitly
+selected provider. `capture` reads only the named gallery file, never changing it.
+`search` prints private resource content to stdout; use it only in the user's
+private Agent context, not public logs. Sync sends selected complete records,
+including source text, summary and any stated save reason, to the chosen provider.
+Local-import authorization does not authorize an external upload. Select the
+personal account/namespace and resource scope before syncing; organization/shared
+scope is not supported. Command adapters are trusted executable code, not data:
+review their configuration and actual service permissions before executing them.
+Authentication remains outside the repository. No credentials belong in resource
+URLs (including query strings), records, fixtures, configs or command arguments.
+
+Deleting a local resource hides it from retrieval and retains a tombstone. It does
+not delete a source bookmark or gallery record, and does not contact any provider
+until an explicit sync. Sync deletions to each previously used provider; selecting
+a new provider does not purge an old one. Adapter acknowledgements are trusted
+receipts, not independent cryptographic proof of remote deletion. See MEMORY.md.
+
+
+Source refresh stores opaque continuation tokens and checkpoints only inside the
+private resource-memory file; do not export them to shared logs. Source config
+selects a personal account and a trusted executable, not credentials. The adapter
+must verify that account against its actual connector. Pull never writes the
+gallery or deletes absent bookmarks. Source failures do not switch account/service.
+Raw changes remain pending until Agent distillation; memory-provider sync skips
+pending entries. No scheduler or external upload is activated by installation.

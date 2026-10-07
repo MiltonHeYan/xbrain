@@ -2,6 +2,7 @@ data/
 dist/
 *.log
 *.pid
+node_modules
 node_modules/
 .env*
 .sites-runtime/

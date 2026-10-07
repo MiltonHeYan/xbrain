@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "Your bookmarks, beautifully kept. Local-first, bring-your-own-agent X bookmark gallery.",
+  "description": "Local-first resource memory Skill and minimal bookmark gallery. Bring your own Agent, source and personal memory provider.",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -24,7 +24,7 @@
     "x",
     "local-first",
     "bring-your-own-agent",
-    "corespeed"
+    "resource-memory"
   ],
   "files": [
     "SKILL.md",
