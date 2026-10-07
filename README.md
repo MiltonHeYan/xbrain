@@ -4,7 +4,18 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
-## 复制这句话给你的 Agent
+## 用你的 Agent 开始
+
+<table>
+<tr>
+<td><a href="https://cursor.com/link/prompt?text=%E8%AF%B7%E9%98%85%E8%AF%BB%20https%3A%2F%2Fgithub.com%2FMiltonHeYan%2Fxrecall%2Fblob%2Fmain%2FSKILL.md%20%EF%BC%8C%E5%B8%AE%E6%88%91%E5%AE%89%E8%A3%85%20xrecall%EF%BC%8C%E5%B9%B6%E5%BC%95%E5%AF%BC%E6%88%91%E5%90%8C%E6%AD%A5%E8%87%AA%E5%B7%B1%E7%9A%84%20X%20%E6%94%B6%E8%97%8F%E3%80%82"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/agents/cursor-dark.svg"><img src="docs/assets/agents/cursor.svg" width="20" height="20" alt="Cursor"></picture> <strong>在 Cursor 中打开 ↗</strong></a></td>
+<td><a href="#copy-prompt"><strong>其他 Agent · 复制指令 ↓</strong></a></td>
+</tr>
+</table>
+
+Cursor 会预填下方提示词，需你确认后才执行。Codex、Claude Code、OpenClaw 等请用代码块右上角的复制按钮，再粘贴到已有 Agent；这些入口不会自动安装或连接账号。
+
+<a name="copy-prompt"></a>
 
 ```text
 请阅读 https://github.com/MiltonHeYan/xrecall/blob/main/SKILL.md ，帮我安装 xrecall，并引导我同步自己的 X 收藏。
