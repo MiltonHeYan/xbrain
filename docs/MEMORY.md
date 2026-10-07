@@ -1,6 +1,6 @@
 # Resource memory: CLI and adapter contract
 
-xrecall is a standalone Skill and local resource store. Source access, Agent reasoning and memory destination are separate. No remote provider is selected implicitly. The existing gallery stays a small black-and-white management view; these memory operations are Agent/CLI operations, not new UI tabs.
+Xbrain is a standalone Skill and local resource store. Source access, Agent reasoning and memory destination are separate. No remote provider is selected implicitly. The existing gallery stays a small black-and-white management view; these memory operations are Agent/CLI operations, not new UI tabs.
 
 For fetching new source bookmarks, incremental/page recovery and Agent distillation, see [SYNC_BOOKMARKS.md](SYNC_BOOKMARKS.md). Source pull and optional memory-provider sync are distinct operations.
 
@@ -124,8 +124,19 @@ Search request/response:
 {"protocol":"xstash.memory.v1","ok":true,"resources":[]}
 ```
 
-Return complete valid resources, at most 50, with no duplicates. xrecall hides local tombstones, prefers local records when IDs overlap, then lexically reranks the candidates. Cross-language semantic-only results may be filtered out. Adapter errors, mismatched acknowledgements, invalid JSON, >1 MiB output, or a 15-second timeout do not confirm sync. stderr is consumed but not displayed to prevent accidental credential disclosure; inspect adapter logs privately when needed. The process runs without a shell; trust and review its executable/config before invoking it.
+Return complete valid resources, at most 50, with no duplicates. Xbrain hides local tombstones, prefers local records when IDs overlap, then lexically reranks the candidates. Cross-language semantic-only results may be filtered out. Adapter errors, mismatched acknowledgements, invalid JSON, >1 MiB output, or a 15-second timeout do not confirm sync. stderr is consumed but not displayed to prevent accidental credential disclosure; inspect adapter logs privately when needed. The process runs without a shell; trust and review its executable/config before invoking it.
 
 ## Verification boundary
 
 The automated suite uses only fictional resources, temporary files and a local mock command. It covers source-ID deduplication, newer updates/stale rejection, delete propagation, retry receipts, local/remote candidate retrieval, original citations, unknown save reasons and unchanged gallery bytes. It does not validate a particular external service, current connector capabilities, live X access or background Agent recall. Choose a real personal memory service and inspect its actual interfaces before claiming that integration is complete.
+
+
+## Optional visual design analysis
+
+Resources may carry a validated `design` field. Older records omit it and remain
+readable with unchanged IDs, storage version and paths. See [DESIGN.md](DESIGN.md)
+for images, evidence-backed domains/features, uncertain style labels, `inspect`
+and revision-guarded `analyze`. Local search also accepts `--domain`, `--feature`
+and `--style`; complete results retain original source and image evidence.
+Providers should preserve the optional field on round trips. No remote provider
+or visual model is selected automatically.

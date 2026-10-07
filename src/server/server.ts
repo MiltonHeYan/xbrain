@@ -1,3 +1,7 @@
+import {readMemory} from '../memory/store.js';
+import {searchResources} from '../memory/model.js';
+import {matchesDesign, validateDesignFilters} from '../shared/design.js';
+import {designGraph} from '../shared/design-graph.js';
 import type {IncomingMessage, ServerResponse} from 'node:http';
 import type {AddressInfo} from 'node:net';
 import {HttpError, errorMessage, errorCode} from '../shared/types.js';
@@ -80,6 +84,27 @@ const server = http.createServer(async (req, res) => {
       ) {
         return json(res, 200, await readStore(store));
       }
+      if (req.method === 'GET' && url.pathname === '/api/design') {
+        if (!process.env.MEMORY_STORE)
+          return json(res, 409, {
+            error:
+              'Start with MEMORY_STORE pointing to your selected resource memory file. The gallery library is separate.',
+          });
+        const query = url.searchParams.get('q') ?? '';
+        const filters = {
+          domain: url.searchParams.get('domain') || undefined,
+          feature: url.searchParams.get('feature') || undefined,
+          style: url.searchParams.get('style') || undefined,
+        };
+        if ([query, ...Object.values(filters)].some((x) => x && x.length > 2000))
+          throw new Error('Search input is too long.');
+        const data = await readMemory(path.resolve(process.env.MEMORY_STORE));
+        validateDesignFilters(filters);
+        const resources = query.trim()
+          ? searchResources(data.resources, query, 10000, filters).map((x) => x.resource)
+          : data.resources.filter((r) => matchesDesign(r.design, filters));
+        return json(res, 200, designGraph(resources));
+      }
       if (req.method === 'POST' && url.pathname === '/api/import') {
         const input = await body(req);
         const {bookmarks, warnings, source} = normalizeImport(input);
@@ -146,11 +171,11 @@ const server = http.createServer(async (req, res) => {
 server.requestTimeout = 30_000;
 server.headersTimeout = 15_000;
 server.on('error', (error) => {
-  console.error(`Could not start xrecall: ${errorCode(error) || errorMessage(error)}`);
+  console.error(`Could not start Xbrain: ${errorCode(error) || errorMessage(error)}`);
   process.exitCode = 1;
 });
 server.listen(configuredPort, '127.0.0.1', () =>
   console.log(
-    `xrecall ready at http://127.0.0.1:${(server.address() as AddressInfo).port}\nLocal datastore: ${store}`,
+    `Xbrain ready at http://127.0.0.1:${(server.address() as AddressInfo).port}\nLocal datastore: ${store}`,
   ),
 );

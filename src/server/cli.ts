@@ -12,7 +12,7 @@ import {readStore, updateStore, DEFAULT_STORE} from './store.js';
 
 const args = process.argv.slice(2);
 const command = args.shift();
-const help = `xrecall bookmark gallery
+const help = `Xbrain bookmark gallery
 
 Usage:
   node cli.mjs import FILE [--store PATH]

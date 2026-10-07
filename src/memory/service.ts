@@ -1,3 +1,4 @@
+import type {DesignFilters} from '../shared/design.js';
 import {digest, searchResources, validateResource} from './model.js';
 import type {Resource} from './model.js';
 import {readMemory, updateMemory} from './store.js';
@@ -9,8 +10,18 @@ export function applyResources(data: MemoryData, resources: Resource[]) {
   let added = 0,
     updated = 0,
     unchanged = 0;
-  for (const resource of resources) {
+  for (const incoming of resources) {
+    let resource = incoming;
     const old = data.resources.find((r) => r.id === resource.id);
+    if (old?.design && (!resource.design || digest(resource.design) === digest(old.design))) {
+      const changed = old.text !== resource.text || digest(old.source) !== digest(resource.source);
+      resource = {
+        ...resource,
+        design: changed
+          ? {...old.design, status: 'stale', reason: 'Source changed; inspect images again.'}
+          : old.design,
+      };
+    }
     const deleted = data.tombstones.find((r) => r.id === resource.id);
     if (
       (old && resource.updatedAt < old.updatedAt) ||
@@ -128,6 +139,7 @@ export async function search(
   query: string,
   limit: number,
   provider?: MemoryProvider,
+  filters: DesignFilters = {},
 ) {
   const data = await readMemory(store);
   const candidates = new Map(data.resources.map((r) => [r.id, r]));
@@ -141,7 +153,7 @@ export async function search(
   return {
     mode: 'lexical_candidates',
     provider: provider?.kind ?? null,
-    results: searchResources([...candidates.values()], query, limit),
+    results: searchResources([...candidates.values()], query, limit, filters),
     guidance:
       'Check applicability, limitations and freshness. Cite original source URLs only when used. No relevant match means no recommendation.',
   };

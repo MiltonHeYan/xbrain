@@ -1,3 +1,4 @@
+import {capturedDesign, analyzeResource} from './design.js';
 import {loadSource} from './source.js';
 import {pullResources, pendingDistillation, distillResources} from './pull.js';
 import {readFile, stat} from 'node:fs/promises';
@@ -16,14 +17,16 @@ import {
   status,
 } from './service.js';
 
-const HELP = `xrecall resource memory — local by default; no implicit remote provider
+const HELP = `Xbrain resource memory — local by default; no implicit remote provider
 
 node scripts/memory.mjs pull --source-config FILE [--max-pages 10] [--restart] [--store FILE]
+node scripts/memory.mjs analyze FILE|- [--store FILE]
 node scripts/memory.mjs pending [--limit 20] [--store FILE]
 node scripts/memory.mjs distill FILE|- [--store FILE]
 node scripts/memory.mjs capture --bookmarks FILE [--store FILE]
 node scripts/memory.mjs put FILE|- [--store FILE]
-node scripts/memory.mjs search "task keywords" [--limit 5] [--provider-config FILE] [--store FILE]
+node scripts/memory.mjs search "task keywords" [--limit 5] [--domain web-ui] [--feature spacing] [--style minimal] [--provider-config FILE] [--store FILE]
+node scripts/memory.mjs inspect RESOURCE_ID [--store FILE]
 node scripts/memory.mjs get RESOURCE_ID [--store FILE]
 node scripts/memory.mjs delete RESOURCE_ID [--store FILE]
 node scripts/memory.mjs status [--provider-config FILE] [--store FILE]
@@ -67,14 +70,16 @@ export async function runMemoryCli(args = process.argv.slice(2)) {
     }
     const allowed: Record<string, string[]> = {
       put: [],
+      analyze: [],
       pull: ['--source-config', '--max-pages', '--restart'],
       pending: ['--limit'],
       distill: [],
       get: [],
+      inspect: [],
       capture: ['--bookmarks'],
       delete: [],
       status: ['--provider-config'],
-      search: ['--provider-config', '--limit'],
+      search: ['--provider-config', '--limit', '--domain', '--feature', '--style'],
       sync: ['--provider-config', '--id', '--all'],
     };
     if (!command || !allowed[command]) throw new Error(HELP);
@@ -97,7 +102,11 @@ export async function runMemoryCli(args = process.argv.slice(2)) {
       if (!value || value.startsWith('--')) throw new Error(`Missing value for ${arg}`);
       options[arg] = value;
     }
-    const expected = ['put', 'get', 'delete', 'search', 'distill'].includes(command) ? 1 : 0;
+    const expected = ['put', 'get', 'delete', 'search', 'distill', 'analyze', 'inspect'].includes(
+      command,
+    )
+      ? 1
+      : 0;
     if (positional.length !== expected)
       throw new Error(`Invalid arguments for ${command}. Use --help.`);
     const store = options['--store'] ?? DEFAULT_MEMORY_STORE;
@@ -120,9 +129,15 @@ export async function runMemoryCli(args = process.argv.slice(2)) {
       result = await pendingDistillation(store, Number(options['--limit'] ?? 20));
     } else if (command === 'distill') {
       result = await distillResources(store, await input(positional[0]!));
+    } else if (command === 'analyze') {
+      result = await analyzeResource(store, await input(positional[0]!));
     } else if (command === 'put') {
       const data = await input(positional[0]!);
       result = await putResources(store, Array.isArray(data) ? data : [data]);
+    } else if (command === 'inspect') {
+      const resource = (await readMemory(store)).resources.find((r) => r.id === positional[0]);
+      if (!resource) throw new Error('Resource not found.');
+      result = {resource, resourceRevision: digest(resource)};
     } else if (command === 'get') {
       result = (await readMemory(store)).resources.find((r) => r.id === positional[0]);
       if (!result) throw new Error('Resource not found.');
@@ -137,6 +152,7 @@ export async function runMemoryCli(args = process.argv.slice(2)) {
             const old = data.resources.find((r) => r.id === id);
             // Capture never resurrects an explicitly removed resource or erases agent/user distillation.
             if (data.tombstones.some((t) => t.id === id)) return null;
+            const design = capturedDesign(old?.design, bookmark.media);
             const resource = validateResource({
               source: {provider: 'x', id: bookmark.id, url: bookmark.url},
               title: old?.title ?? bookmark.text.slice(0, 120),
@@ -145,6 +161,7 @@ export async function runMemoryCli(args = process.argv.slice(2)) {
               purpose: old?.purpose ?? '',
               useWhen: old?.useWhen ?? [],
               limitations: old?.limitations ?? [],
+              ...(design ? {design} : {}),
               savedReason: old?.savedReason ?? null,
               updatedAt: old?.updatedAt ?? new Date().toISOString(),
             });
@@ -172,9 +189,19 @@ export async function runMemoryCli(args = process.argv.slice(2)) {
     else if (command === 'search') {
       const query = positional[0]!.trim();
       const limit = Number(options['--limit'] ?? 5);
-      if (!query || query.length > 2000 || !Number.isInteger(limit) || limit < 1 || limit > 20)
-        throw new Error('Use a nonempty query (max 2,000 characters), and limit 1–20.');
-      result = await search(store, query, limit, provider);
+      if (
+        (!query && !options['--domain'] && !options['--feature'] && !options['--style']) ||
+        query.length > 2000 ||
+        !Number.isInteger(limit) ||
+        limit < 1 ||
+        limit > 20
+      )
+        throw new Error('Use a query or design filter (max 2,000 characters), and limit 1–20.');
+      result = await search(store, query, limit, provider, {
+        domain: options['--domain'],
+        feature: options['--feature'],
+        style: options['--style'],
+      });
     } else {
       if (!provider)
         throw new Error(

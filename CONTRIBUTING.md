@@ -1,6 +1,6 @@
 # Contributing
 
-感谢帮助改进 xrecall。这个原型优先保持可审查、可迁移和易运行。
+感谢帮助改进 Xbrain。这个原型优先保持可审查、可迁移和易运行。
 
 ## Local workflow
 

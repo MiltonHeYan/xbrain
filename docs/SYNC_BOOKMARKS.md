@@ -1,6 +1,6 @@
 # “Sync my new bookmarks”: manual Agent workflow
 
-The Skill owns the workflow; the user's Agent executes it. A selected source connector fetches authorized bookmarks, xrecall stores committed pages and deduplicates by original source ID, the Agent distills changed resources, and an explicitly chosen memory provider receives approved updates. Source and memory choices are independent. No scheduler, login or remote backend is enabled automatically.
+The Skill owns the workflow; the user's Agent executes it. A selected source connector fetches authorized bookmarks, Xbrain stores committed pages and deduplicates by original source ID, the Agent distills changed resources, and an explicitly chosen memory provider receives approved updates. Source and memory choices are independent. No scheduler, login or remote backend is enabled automatically.
 
 ## Shortest real-use sequence
 
@@ -33,7 +33,7 @@ Whole-library `--all` is only for explicit whole-library authorization. It inclu
 
 ## Source configuration and real adapter boundary
 
-A source adapter is a trusted, locally executable program that calls the user's selected connector. Auth remains in that connector/client; xrecall config carries no token. An available MCP tool is **not** automatically accessible to a subprocess: the user-selected client must expose an authorized interface or a reviewed adapter must be implemented. Do not copy credentials or invent a vendor API to bridge this gap.
+A source adapter is a trusted, locally executable program that calls the user's selected connector. Auth remains in that connector/client; Xbrain config carries no token. An available MCP tool is **not** automatically accessible to a subprocess: the user-selected client must expose an authorized interface or a reviewed adapter must be implemented. Do not copy credentials or invent a vendor API to bridge this gap.
 
 ```json
 {
@@ -110,9 +110,15 @@ node scripts/memory.mjs pull --source-config /private/source.json --restart
 
 A process stopped before a page commit can replay that page. Atomic file replacement leaves either the old or new committed state. A hard crash during the brief filesystem mutation may leave a `.lock` file: verify the owning process stopped before removing that exact stale lock and retry. There is no automatic unsafe lock stealing or distributed transaction.
 
-Identity is the original provider + source ID. Changes in source title/text/URL enqueue new distillation; merely changing an upstream timestamp does not. Older source versions are skipped when the source provides reliable timestamps; equal timestamps with conflicting content fail. With no upstream version timestamp, xrecall cannot distinguish an outdated backend snapshot from a true change—ensure the adapter returns fresh data and review it. Existing custom titles, notes represented in distillation, and known save reasons are preserved. A source-derived title updates when it has not been customized.
+Identity is the original provider + source ID. Changes in source title/text/URL enqueue new distillation; merely changing an upstream timestamp does not. Older source versions are skipped when the source provides reliable timestamps; equal timestamps with conflicting content fail. With no upstream version timestamp, Xbrain cannot distinguish an outdated backend snapshot from a true change—ensure the adapter returns fresh data and review it. Existing custom titles, notes represented in distillation, and known save reasons are preserved. A source-derived title updates when it has not been customized.
 
 **Absence is never deletion**, including empty windows, partial fetches, errors and rate limits. Existing local tombstones prevent re-import from resurrecting explicitly removed resources. Source fetch never unbookmarks anything on X. Deletion remains an explicit local operation plus separately authorized target sync.
+
+## Original media and Gallery previews
+
+The currently exposed CoreSpeed `twitter__get_my_bookmarks` and `twitter__get_post` calls return text but do not expose media expansions. Missing media fields do not mean that the original post has no images. Both Gallery and Graph use the selected `MEMORY_STORE`; Gallery previews saved original image URLs by default, and its image toggle is remembered locally.
+
+For the user's selected bookmark snapshot, an Agent may read the supported `social__x_post` detail by original source ID and retain the returned attached-media URLs. Verify that the returned post ID matches, validate HTTPS URLs, and use `inspect` → revision-guarded `analyze` to add pointers with `status: "unanalyzed"`, `observed: false`, and empty visual labels. Skip records that already have image analysis; media discovery is not visual analysis. Record missing media and read failures separately. Do not substitute profile images, guessed URLs, or images from other posts. This is a bounded, metered read, not an automatic background enrichment or a prebuilt import package.
 
 ## Agent distillation
 

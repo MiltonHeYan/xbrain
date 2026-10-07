@@ -1,4 +1,6 @@
 import {createHash} from 'node:crypto';
+import {validateDesign, matchesDesign, validateDesignFilters} from '../shared/design.js';
+import type {DesignAnalysis, DesignFilters} from '../shared/design.js';
 import {isObject} from '../shared/types.js';
 
 export interface Resource {
@@ -12,6 +14,7 @@ export interface Resource {
   limitations: string[];
   savedReason: string | null;
   updatedAt: string;
+  design?: DesignAnalysis;
 }
 export interface SearchHit {
   resource: Resource;
@@ -68,6 +71,7 @@ export function validateResource(input: unknown): Resource {
     limitations: list(input.limitations, 'limitations'),
     savedReason: input.savedReason === null ? null : string(input.savedReason, 'savedReason'),
     updatedAt: timestamp(input.updatedAt),
+    ...(input.design === undefined ? {} : {design: validateDesign(input.design)}),
   };
 }
 const stopwords = new Set(
@@ -89,12 +93,29 @@ function terms(value: string): string[] {
   ];
 }
 /** Local lexical candidate retrieval; the Agent must assess applicability/limitations. */
-export function searchResources(resources: Resource[], query: string, limit = 5): SearchHit[] {
+export function searchResources(
+  resources: Resource[],
+  query: string,
+  limit = 5,
+  filters: DesignFilters = {},
+): SearchHit[] {
+  validateDesignFilters(filters);
   const words = terms(query);
-  if (!words.length) return [];
+  if (!words.length && !Object.values(filters).some(Boolean)) return [];
   return resources
+    .filter((r) => matchesDesign(r.design, filters))
     .map((resource): SearchHit => {
       const fields = [
+        [
+          resource.design?.status === 'analyzed'
+            ? [
+                ...resource.design.features.map((x) => x.value),
+                ...resource.design.styles.map((x) => x.label),
+                ...resource.design.domains.map((x) => x.label),
+              ].join(' ')
+            : '',
+          4,
+        ],
         [resource.title, 4],
         [resource.purpose, 4],
         [resource.useWhen.join(' '), 4],
@@ -113,7 +134,7 @@ export function searchResources(resources: Resource[], query: string, limit = 5)
       });
       return {
         resource,
-        score: matched.length / words.length >= 0.35 ? score : 0,
+        score: !words.length ? 1 : matched.length / words.length >= 0.35 ? score : 0,
         matched,
         citation: {id: resource.id, url: resource.source.url, updatedAt: resource.updatedAt},
       };
