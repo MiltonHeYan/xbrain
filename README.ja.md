@@ -10,6 +10,10 @@ https://github.com/MiltonHeYan/xbrain/blob/main/SKILL.md を読み、Xbrain の�
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
+[![Xbrain コンセプト映像：保存した資料、Gallery、Brain](docs/assets/xbrain-demo-v6.jpg)](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
+[▶ 34 秒のコンセプト映像を開く（MP4）](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
 ## 「画像は保存したけれど、スタイルの名前がわからない。」
 
 Agent が保存済みの UI やインテリア画像を見て、視覚的な特徴と根拠のあるスタイル候補を記録します。デザイン時には原画像を検索し、共通点を比較。あなたが方向性を確認してから要件にします。ローカルの関係図でつながりも確認できます。

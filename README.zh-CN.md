@@ -10,6 +10,10 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
+[![Xbrain 概念视频：收藏、Gallery 与 Brain](docs/assets/xbrain-demo-v6.jpg)](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
+[▶ 打开 34 秒概念视频（MP4）](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
 ## “图我收藏了，但说不出这是什么风格。”
 
 Agent 查看你收藏的 UI 或室内设计原图，记录可见特征，给出有证据的风格假设。做设计时，找回相关原图、比较共同点，由你确认方向后转成设计要求。本地关系图展示这些关联。
