@@ -10,6 +10,10 @@ https://github.com/MiltonHeYan/xbrain/blob/main/SKILL.md 를 읽고 Xbrain 설�
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
+[![Xbrain 콘셉트 영상: 저장한 자료, Gallery와 Brain](docs/assets/xbrain-demo-v6.jpg)](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
+[▶ 34초 콘셉트 영상 열기 (MP4)](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
 ## “이미지는 저장했는데 스타일 이름을 모르겠어요.”
 
 Agent가 저장한 UI 또는 인테리어 원본 이미지를 보고 시각적 특징과 근거가 있는 스타일 가설을 기록합니다. 디자인할 때 관련 원본과 공통점을 비교하고, 사용자가 방향을 확인하면 요구사항으로 정리합니다. 로컬 관계도에서 연결을 탐색할 수 있습니다.

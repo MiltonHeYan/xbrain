@@ -10,6 +10,10 @@ Read https://github.com/MiltonHeYan/xbrain/blob/main/SKILL.md, help me install X
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
+[![Xbrain concept film: saved references, Gallery and Brain](docs/assets/xbrain-demo-v6.jpg)](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
+[▶ Open the 34-second concept film (MP4)](https://github.com/corespeed-io/xbrain/releases/download/demo-video-v6/Xbrain-concept-v6.mp4)
+
 ## “I saved the look, but I don't know its name.”
 
 Your Agent looks at your saved UI or interior images, records visible features and suggests possible styles with evidence. Ask for a design: retrieve relevant originals, compare shared details, confirm a direction, then turn it into requirements. Explore those connections in the local reference graph.
