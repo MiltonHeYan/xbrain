@@ -1,7 +1,8 @@
+import {apiUnavailable, readReferencePage} from './http.js';
 import {useEffect, useState} from 'react';
 import {App} from './App.js';
 import {ReferenceGallery} from './ReferenceGallery.js';
-import type {DesignGraph as GraphData} from '../shared/design-graph.js';
+import type {ReferencePage} from '../shared/design-graph.js';
 import {DesignGraph} from './DesignGraph.js';
 import {BrandMark} from './BrandMark.js';
 import './workspace.css';
@@ -9,7 +10,7 @@ type View = 'gallery' | 'graph';
 const currentView = (): View =>
   new URLSearchParams(window.location.search).get('view') === 'graph' ? 'graph' : 'gallery';
 export function Workspace() {
-  const [shared, setShared] = useState<GraphData | null>(null);
+  const [shared, setShared] = useState<ReferencePage | null>(null);
   const [sourceMode, setSourceMode] = useState<'loading' | 'memory' | 'legacy' | 'error'>(
     'loading',
   );
@@ -17,14 +18,13 @@ export function Workspace() {
   const [focusId, setFocusId] = useState('');
   useEffect(() => {
     const abort = new AbortController();
-    fetch('/api/design', {signal: abort.signal})
+    fetch('/api/references', {signal: abort.signal})
       .then(async (r) => {
-        if (r.status === 409 || r.status === 404) {
+        if (r.status === 409 || apiUnavailable(r)) {
           setSourceMode('legacy');
           return;
         }
-        const d = await r.json();
-        if (!r.ok) throw Error(d.error || 'Could not read the selected reference memory.');
+        const d = await readReferencePage(r);
         setShared(d);
         setSourceMode('memory');
       })
@@ -115,6 +115,7 @@ export function Workspace() {
         {visited.gallery &&
           (shared ? (
             <ReferenceGallery
+              active={view === 'gallery'}
               data={shared}
               onGraph={(id) => {
                 setFocusId(id);
@@ -132,12 +133,7 @@ export function Workspace() {
       <div id="panel-graph" role="tabpanel" aria-labelledby="tab-graph" hidden={view !== 'graph'}>
         {visited.graph &&
           (sourceMode === 'memory' || sourceMode === 'legacy' ? (
-            <DesignGraph
-              embedded
-              onCount={setGraphCount}
-              providedData={shared ?? undefined}
-              focusId={focusId}
-            />
+            <DesignGraph embedded onCount={setGraphCount} focusId={focusId} />
           ) : (
             <p role={sourceMode === 'error' ? 'alert' : 'status'}>
               {sourceError || 'Loading your references…'}

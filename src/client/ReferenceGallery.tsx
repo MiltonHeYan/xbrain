@@ -1,5 +1,6 @@
-import {useMemo, useState} from 'react';
-import type {DesignGraph} from '../shared/design-graph.js';
+import {readReferencePage} from './http.js';
+import {useEffect, useRef, useState} from 'react';
+import type {ReferencePage} from '../shared/design-graph.js';
 function SourceImage({url, title}: {url: string; title: string}) {
   const [failed, setFailed] = useState(false);
   return failed ? (
@@ -17,8 +18,10 @@ function SourceImage({url, title}: {url: string; title: string}) {
 export function ReferenceGallery({
   data,
   onGraph,
+  active = true,
 }: {
-  data: DesignGraph;
+  data: ReferencePage;
+  active?: boolean;
   onGraph: (id: string) => void;
 }) {
   const [query, setQuery] = useState(''),
@@ -29,12 +32,65 @@ export function ReferenceGallery({
         return true;
       }
     });
-  const resources = useMemo(() => {
-    const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    return data.resources.filter((r) =>
-      terms.every((t) => [r.title, r.text, r.summary].join(' ').toLowerCase().includes(t)),
+  const [page, setPage] = useState(data),
+    [error, setError] = useState(''),
+    [loading, setLoading] = useState(false),
+    [offset, setOffset] = useState(0);
+  const completed = useRef<{data: ReferencePage; query: string; offset: number} | null>(null);
+  useEffect(() => {
+    if (!active) {
+      setLoading(false);
+      return;
+    }
+    if (!query.trim() && offset === 0) {
+      completed.current = null;
+      setPage(data);
+      setLoading(false);
+      setError('');
+      return;
+    }
+    // Returning to a completed page must not refetch and append it twice.
+    if (
+      completed.current?.data === data &&
+      completed.current.query === query &&
+      completed.current.offset === offset
+    ) {
+      setLoading(false);
+      setError('');
+      return;
+    }
+    const abort = new AbortController();
+    setLoading(true);
+    setError('');
+    const timer = window.setTimeout(
+      () => {
+        fetch(`/api/references?q=${encodeURIComponent(query)}&offset=${offset}`, {
+          signal: abort.signal,
+        })
+          .then(readReferencePage)
+          .then((next) => {
+            if (abort.signal.aborted) return;
+            completed.current = {data, query, offset};
+            setPage((previous) =>
+              offset ? {...next, resources: [...previous.resources, ...next.resources]} : next,
+            );
+          })
+          .catch((e) => {
+            if (!abort.signal.aborted)
+              setError(e instanceof Error ? e.message : 'Could not load references.');
+          })
+          .finally(() => {
+            if (!abort.signal.aborted) setLoading(false);
+          });
+      },
+      offset === 0 ? 300 : 0,
     );
-  }, [data, query]);
+    return () => {
+      window.clearTimeout(timer);
+      abort.abort();
+    };
+  }, [active, data, query, offset]);
+  const resources = page.resources;
   return (
     <main className="reference-gallery">
       <div className="reference-gallery-tools">
@@ -44,7 +100,10 @@ export function ReferenceGallery({
             type="search"
             placeholder="Search your bookmarks…"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setOffset(0);
+            }}
           />
         </label>
         <label className="reference-image-choice">
@@ -64,16 +123,11 @@ export function ReferenceGallery({
         </label>
       </div>
       <p className="reference-gallery-note">
-        {resources.length} of {data.total} bookmarks ·{' '}
-        {data.resources.filter((r) => r.design?.images.length).length} with source images · Images
-        load from their original source when enabled.
+        {resources.length} of {page.matched} matches · {data.total} bookmarks · Images load from
+        their original source when enabled.
       </p>
-      {data.truncated && (
-        <p role="status">
-          This shared overview shows the first {data.resources.length} of {data.total} records.
-          Narrow the collection for more.
-        </p>
-      )}
+      {loading && <p role="status">Loading references…</p>}
+      {error && <p role="alert">{error}</p>}
       <section className="reference-grid" aria-label="Saved references">
         {resources.map((r) => {
           const design = r.design;
@@ -134,6 +188,11 @@ export function ReferenceGallery({
           );
         })}
       </section>
+      {page.hasMore && (
+        <button disabled={loading || !!error} onClick={() => setOffset(resources.length)}>
+          Load more references
+        </button>
+      )}
       {!resources.length && <p>No references match this search.</p>}
     </main>
   );

@@ -29,7 +29,7 @@ test('untrusted shapes and URL schemes cannot become executable links', () => {
     assert.equal(safeUrl(value), '');
   }
   assert.equal(safeUrl('https://example.com/path?q=1'), 'https://example.com/path?q=1');
-  assert.equal(normalized({...row, author: {username: 'bad/name'}}).url, `https://x.com/i/status/${row.id}`);
+  assert.equal(normalized({...row, author: {username: 'bad/name'}}).url, `https://x.com/i/web/status/${row.id}`);
   assert.equal(normalized({...row, author: {username: '@valid_user'}}).author.username, 'valid_user');
 });
 

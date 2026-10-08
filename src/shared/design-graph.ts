@@ -1,4 +1,11 @@
 import type {Resource} from '../memory/model.js';
+export interface ReferencePage {
+  resources: Resource[];
+  total: number;
+  matched: number;
+  offset: number;
+  hasMore: boolean;
+}
 export interface GraphNode {
   id: string;
   label: string;

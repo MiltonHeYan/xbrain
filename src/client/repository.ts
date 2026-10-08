@@ -1,3 +1,4 @@
+import {apiUnavailable, readApiJson} from './http.js';
 import {
   mergeBookmarks,
   normalizeBookmarkPatch,
@@ -12,40 +13,17 @@ import type {Bookmark, BookmarkPatch} from '../shared/types.js';
 export const STORAGE_KEY = 'commonplace.library.v1';
 async function request(url: string, options: RequestInit = {}): Promise<unknown> {
   const response = await fetch(url, {...options, signal: AbortSignal.timeout(10000)});
-  let data: unknown;
-  try {
-    data = await response.json();
-  } catch {
-    throw new Error('The local app returned an unreadable response. Nothing has been overwritten.');
-  }
-  if (!response.ok)
-    throw new Error(
-      isObject(data) && typeof data.error === 'string'
-        ? data.error
-        : 'The local app could not complete this request.',
-    );
-  return data;
+  return readApiJson(response);
 }
 export class LibraryRepository {
   mode: 'server' | 'browser' = 'server';
   async load(): Promise<{bookmarks: Bookmark[]; showSamples: boolean}> {
     const response = await fetch('/api/bookmarks', {signal: AbortSignal.timeout(5000)});
-    const json = response.headers.get('content-type')?.includes('application/json');
-    // Vite/static hosts may return HTML for a missing API route. Network and API failures never fall back.
-    if (response.status !== 404 && (!response.ok || json)) {
-      const data: unknown = await response.json();
-      if (!response.ok)
-        throw new Error(
-          isObject(data) && typeof data.error === 'string'
-            ? data.error
-            : 'Your local library could not be opened.',
-        );
-      const bookmarks = normalizeLibrary(data).bookmarks;
+    if (!apiUnavailable(response)) {
+      const bookmarks = normalizeLibrary(await readApiJson(response)).bookmarks;
       this.mode = 'server';
       return {bookmarks, showSamples: false};
     }
-    if (!response.ok && response.status !== 404)
-      throw new Error('Your local library could not be opened.');
     this.mode = 'browser';
     const saved = localStorage.getItem(STORAGE_KEY);
     return {

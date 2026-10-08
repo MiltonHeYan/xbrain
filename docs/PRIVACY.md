@@ -62,8 +62,11 @@ The provided app has no analytics SDK, advertising script, model client,
 background sync, or remote font dependency. Its local API requests stay on the
 same origin. That does not mean every user action is network-free:
 
-- External images are off by default. The “Show external images” control in bookmark details
-  enables them only while that detail is open; closing it resets consent.
+- Gallery reference previews load saved source images by default. “Show source images”
+  turns them off or on; this preference is remembered in local browser storage across
+  refreshes. Graph evidence images and legacy bookmark-detail images remain off by
+  default and require their separate image controls; closing/changing that selection
+  resets the detail image choice.
   Loading a referenced remote image contacts that image host. It can observe
   your IP address and request metadata even when referrer information is
   suppressed. Image URLs may themselves contain identifiers.

@@ -1,3 +1,4 @@
+import {xPostUrl} from '../shared/bookmarks.js';
 import {readFile, stat} from 'node:fs/promises';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
@@ -81,7 +82,7 @@ export function snapshotPage(
       id: row.id,
       title: row.text.slice(0, 120),
       text: row.text,
-      url: `https://x.com/i/web/status/${row.id}`,
+      url: xPostUrl(row.id),
       updatedAt: null,
     };
   });

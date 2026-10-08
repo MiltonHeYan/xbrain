@@ -140,3 +140,14 @@ and revision-guarded `analyze`. Local search also accepts `--domain`, `--feature
 and `--style`; complete results retain original source and image evidence.
 Providers should preserve the optional field on round trips. No remote provider
 or visual model is selected automatically.
+
+## X URL normalization and existing sync receipts
+
+Recognized X/Twitter post URL aliases now normalize to `https://x.com/i/web/status/<id>`.
+Existing resource IDs and visual analysis stay unchanged. For a record previously synced
+with a noncanonical URL, normalization changes its content revision: the next explicitly
+authorized sync to each previously used provider sends that record once again. A successful
+acknowledgement updates its receipt, so the next unchanged sync skips it. Records already
+using the canonical URL do not need this extra send. This is provider-sync pending work,
+not a new text-distillation requirement, and the upgrade does not start a background sync.
+Command-adapter providers must continue to upsert idempotently by stable resource ID.
